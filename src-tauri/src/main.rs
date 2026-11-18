@@ -3,7 +3,7 @@ use base64::{engine::general_purpose::STANDARD, Engine};
 use image::{AnimationDecoder, ImageFormat};
 use serde_json::Value;
 use std::{fs::{self, File}, io::{Cursor, Write}, path::{Path, PathBuf}, sync::Mutex};
-use tauri::{Emitter, Manager, menu::{CheckMenuItem, Menu, MenuItem, ContextMenu}, tray::{TrayIconBuilder, TrayIconEvent, MouseButton, MouseButtonState}};
+use tauri::{Emitter, Manager, menu::{CheckMenuItem, Menu, MenuItem}, tray::{TrayIconBuilder, TrayIconEvent, MouseButton, MouseButtonState}};
 use tauri_plugin_autostart::ManagerExt;
 struct DiskLock(Mutex<()>);
 fn dir(app: &tauri::AppHandle) -> Result<PathBuf,String> { let p=app.path().app_data_dir().map_err(|e|e.to_string())?;fs::create_dir_all(&p).map_err(|e|e.to_string())?;Ok(p) }
@@ -97,7 +97,7 @@ fn set_topmost(app:tauri::AppHandle,enabled:bool)->Result<(),String>{
 #[tauri::command]
 fn quit_app(app:tauri::AppHandle){app.exit(0);}
 #[tauri::command]
-fn popup_menu(app:tauri::AppHandle)->Result<(),String>{let window=app.get_window("main").ok_or("Окно недоступно")?;app.menu().ok_or("Меню недоступно")?.popup(window).map_err(error)}
+fn popup_menu(app:tauri::AppHandle)->Result<(),String>{let window=app.get_webview_window("main").ok_or("Окно недоступно")?;let menu=app.menu().ok_or("Меню недоступно")?;window.popup_menu(&menu).map_err(error)}
 fn main(){
  tauri::Builder::default()
   .plugin(tauri_plugin_single_instance::init(|app,_,_|{if let Some(w)=app.get_webview_window("main"){let _=w.show();let _=w.set_focus();let _=app.emit("app-action","show");}}))
@@ -114,10 +114,23 @@ fn main(){
    let quit=MenuItem::with_id(app,"quit","Выйти",true,None::<&str>)?;
    let menu=Menu::with_items(app,&[&show,&compact,&settings,&top,&quit])?;
    app.set_menu(menu.clone())?;if let Some(w)=app.get_webview_window("main"){let _=w.hide_menu();}
-   TrayIconBuilder::new().tooltip("ЧекОверлей").icon(tauri::image::Image::from_bytes(include_bytes!("../icons/tray.png"))?).menu(&menu).show_menu_on_left_click(false)
+   let tray=TrayIconBuilder::new().tooltip("ЧекОверлей").icon(tauri::image::Image::from_bytes(include_bytes!("../icons/tray.png"))?).menu(&menu).show_menu_on_left_click(false)
     .on_menu_event(|app,event|{let _=app.emit("app-action",event.id().as_ref());})
     .on_tray_icon_event(|tray,event|{if matches!(event,TrayIconEvent::Click{button:MouseButton::Left,button_state:MouseButtonState::Up,..}){let app=tray.app_handle();if let Some(w)=app.get_webview_window("main"){let _=w.show();let _=w.set_focus();}let _=app.emit("app-action","show");}}).build(app)?;
+   app.manage(tray);
    #[cfg(windows)]if let Some(w)=app.get_webview_window("main"){let _=window_vibrancy::apply_acrylic(&w,Some((230,240,246,100)));}
    Ok(())
   }).run(tauri::generate_context!()).expect("Не удалось запустить CheckOverlay");
+}
+
+#[cfg(test)]
+mod tests {
+ use super::*;
+ #[test]
+ #[cfg(windows)]
+ fn windows_boot_guid_is_stable_and_nonzero(){let first=boot_id().unwrap();assert_eq!(first.len(),32);assert!(first.chars().any(|c|c!='0'));assert_eq!(first,boot_id().unwrap());}
+ #[test]
+ fn replacement_preserves_complete_json(){let folder=std::env::temp_dir().join(format!("checkoverlay-test-{}",uuid::Uuid::new_v4()));fs::create_dir(&folder).unwrap();let old=folder.join("state.json");let next=folder.join("state.tmp");fs::write(&old,b"old").unwrap();fs::write(&next,b"new").unwrap();replace(&next,&old).unwrap();assert_eq!(fs::read(&old).unwrap(),b"new");fs::remove_file(old).unwrap();fs::remove_dir(folder).unwrap();}
+ #[test]
+ fn image_validation_accepts_png_and_rejects_invalid(){assert_eq!(check_image(include_bytes!("../icons/32x32.png")).unwrap(),"png");assert!(check_image(b"not an image").is_err());}
 }

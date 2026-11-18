@@ -110,7 +110,7 @@ async function bootAndRender(){
   unlisten.push(await win.onMoved(saveGeometry),await win.onResized(saveGeometry));
 
  }
- setInterval(()=>{if(cleanup(state,Date.now(),boot))afterMutation();},15000);
+ setInterval(()=>{if(cleanup(state,Date.now(),boot))afterMutation();},1000);
  window.addEventListener('focus',()=>{if(cleanup(state,Date.now(),boot))afterMutation();});
 }
 async function init(){
@@ -123,4 +123,5 @@ async function init(){
  catch(e){$('recoveryError').textContent=String(e);$('recovery').showModal();if(native)await win.show();return;}
  await bootAndRender();if(!native)message('Просмотр интерфейса. Задачи здесь хранятся отдельно от Windows-приложения.');
 }
+matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',()=>updateIcon());
 init().catch(message);
