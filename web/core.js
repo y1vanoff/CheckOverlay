@@ -17,7 +17,7 @@ export function toggleTask(s,id,now,boot){const t=s.tasks.find(t=>t.id===id);if(
 export function boundaryAt(now){const d=new Date(now);d.setHours(9,0,0,0);if(d.getTime()>now)d.setDate(d.getDate()-1);return d.getTime();}
 export function cleanup(s,now,boot){
  const boundary=boundaryAt(now),due=boundary>s.cleanup.boundary,newBoot=!!boot&&s.cleanup.boot!==boot;let changed=false;
- const prev=s.tasks.length;s.tasks=s.tasks.filter(t=>!t.done||!(due&&t.completedAt<=boundary||newBoot&&t.boot!==boot));changed=prev!==s.tasks.length;
+ const prev=s.tasks.length;s.tasks=s.tasks.filter(t=>!t.done||!(due&&t.completedAt<=boundary||newBoot&&t.boot!=='unknown'&&t.boot!==boot));changed=prev!==s.tasks.length;
  if(s.draft?.id&&!s.tasks.some(t=>t.id===s.draft.id))s.draft=null;
  if(due){s.cleanup.boundary=boundary;changed=true;}if(boot&&s.cleanup.boot!==boot){s.cleanup.boot=boot;changed=true;}return changed;
 }
