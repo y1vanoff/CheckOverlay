@@ -1,0 +1,6 @@
+node_modules/
+src-tauri/target/
+playwright-report/
+test-results/
+web/assets/icon-source.png
+src-tauri/icons/
