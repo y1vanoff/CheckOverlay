@@ -3,7 +3,7 @@ use base64::{engine::general_purpose::STANDARD, Engine};
 use image::{AnimationDecoder, ImageFormat};
 use serde_json::Value;
 use std::{fs::{self, File}, io::{Cursor, Write}, path::{Path, PathBuf}, sync::Mutex};
-use tauri::{Emitter, Manager, menu::{CheckMenuItem, Menu, MenuItem}, tray::{TrayIconBuilder, TrayIconEvent, MouseButton, MouseButtonState}};
+use tauri::{Emitter, Manager, menu::{CheckMenuItem, Menu, MenuItem, ContextMenu}, tray::{TrayIconBuilder, TrayIconEvent, MouseButton, MouseButtonState}};
 use tauri_plugin_autostart::ManagerExt;
 struct DiskLock(Mutex<()>);
 fn dir(app: &tauri::AppHandle) -> Result<PathBuf,String> { let p=app.path().app_data_dir().map_err(|e|e.to_string())?;fs::create_dir_all(&p).map_err(|e|e.to_string())?;Ok(p) }
@@ -83,15 +83,27 @@ fn read_icon(app:tauri::AppHandle,name:String,reduce_motion:bool)->Result<String
  Ok(format!("data:image/{};base64,{}",if ext=="jpg"{"jpeg"}else{ext},STANDARD.encode(bytes)))
 }
 #[tauri::command]
+fn set_material(app:tauri::AppHandle,compact:bool)->Result<(),String>{
+ let w=app.get_webview_window("main").ok_or("Окно недоступно")?;
+ #[cfg(windows)]{if compact{let _=window_vibrancy::clear_acrylic(&w);}else{let _=window_vibrancy::apply_acrylic(&w,Some((230,240,246,100)));}}
+ Ok(())
+}
+#[tauri::command]
+fn set_topmost(app:tauri::AppHandle,enabled:bool)->Result<(),String>{
+ let w=app.get_webview_window("main").ok_or("Окно недоступно")?;w.set_always_on_top(enabled).map_err(error)?;
+ if let Some(item)=app.menu().and_then(|m|m.get("topmost")){if let Some(check)=item.as_check_menuitem(){check.set_checked(enabled).map_err(error)?;}}
+ Ok(())
+}
+#[tauri::command]
 fn quit_app(app:tauri::AppHandle){app.exit(0);}
 #[tauri::command]
-fn popup_menu(app:tauri::AppHandle)->Result<(),String>{let window=app.get_webview_window("main").ok_or("Окно недоступно")?;app.menu().ok_or("Меню недоступно")?.popup(window).map_err(error)}
+fn popup_menu(app:tauri::AppHandle)->Result<(),String>{let window=app.get_window("main").ok_or("Окно недоступно")?;app.menu().ok_or("Меню недоступно")?.popup(window).map_err(error)}
 fn main(){
  tauri::Builder::default()
   .plugin(tauri_plugin_single_instance::init(|app,_,_|{if let Some(w)=app.get_webview_window("main"){let _=w.show();let _=w.set_focus();let _=app.emit("app-action","show");}}))
   .plugin(tauri_plugin_autostart::init(tauri_plugin_autostart::MacosLauncher::LaunchAgent,None))
   .manage(DiskLock(Mutex::new(())))
-  .invoke_handler(tauri::generate_handler![load_state,save_state,archive_corrupt,recover_state,autostart_enabled,set_autostart,boot_id,choose_image,read_icon,quit_app,popup_menu])
+  .invoke_handler(tauri::generate_handler![load_state,save_state,archive_corrupt,recover_state,autostart_enabled,set_autostart,boot_id,choose_image,read_icon,set_material,set_topmost,quit_app,popup_menu])
   .on_window_event(|window,event|{if let tauri::WindowEvent::CloseRequested{api,..}=event{api.prevent_close();let _=window.emit("app-action","hide");}})
   .setup(|app|{
    let show=MenuItem::with_id(app,"show","Показать чеклист",true,None::<&str>)?;

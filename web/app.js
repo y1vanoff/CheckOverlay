@@ -50,16 +50,19 @@ async function rememberGeometry(){
  persist().catch(()=>{});
 }
 async function setMode(mode){
+ if(native&&ready&&!geometryBusy)await rememberGeometry();
  geometryBusy=true;
  try{
   if(native){
+   await invoke('set_material',{compact:mode==='compact'});
    const monitors=await tauri.window.availableMonitors();
    const old=state.settings.geometry[mode];
-   const target=monitors.find(m=>old&&old.x>=m.workArea.position.x&&old.x<m.workArea.position.x+m.workArea.size.width&&old.y>=m.workArea.position.y&&old.y<m.workArea.position.y+m.workArea.size.height)??monitors[0];
+   const primary=await tauri.window.primaryMonitor();
+   const target=monitors.find(m=>old&&old.x>=m.workArea.position.x&&old.x<m.workArea.position.x+m.workArea.size.width&&old.y>=m.workArea.position.y&&old.y<m.workArea.position.y+m.workArea.size.height)??primary??monitors[0];
    if(target){const scale=target.scaleFactor;const area=target.workArea;
     const logical=fitGeometry(old?{x:old.x/scale,y:old.y/scale,width:old.width,height:old.height}:null,[{x:area.position.x/scale,y:area.position.y/scale,width:area.size.width/scale,height:area.size.height/scale}],mode);
     await win.setMinSize(null);await win.setMaxSize(null);await win.setResizable(mode==='full');await win.setSize(new tauri.dpi.LogicalSize(logical.width,logical.height));await win.setPosition(new tauri.dpi.PhysicalPosition(Math.round(logical.x*scale),Math.round(logical.y*scale)));
-    if(mode==='full')await win.setMinSize(new tauri.dpi.LogicalSize(Math.min(340,logical.width),Math.min(320,logical.height)));
+    if(mode==='full'){await win.setMinSize(new tauri.dpi.LogicalSize(Math.min(340,logical.width),Math.min(320,logical.height)));await win.setMaxSize(new tauri.dpi.LogicalSize(area.size.width/scale,area.size.height/scale));}
    }
   }
   state.settings.mode=mode;
@@ -85,7 +88,7 @@ $('settingsButton').onclick=settings;$('back').onclick=()=>{$('settings').hidden
 $('collapse').onclick=async()=>{await rememberGeometry();await setMode('compact');};
 $('hide').onclick=()=>hide().catch(message);$('quit').onclick=quit;$('retry').onclick=()=>persist().catch(()=>{});
 $('exitCancel').onclick=()=>$('exitDialog').close();$('exitRetry').onclick=async()=>{try{await persist();$('exitDialog').close();await exit();}catch{}};$('exitAnyway').onclick=exit;
-for(const name of ['topmost','showDone','confirmDelete'])$(name).onchange=async e=>{const value=e.target.checked;try{if(name==='topmost'&&native)await win.setAlwaysOnTop(value);state.settings[name]=value;applyStyle();persist().catch(()=>{});}catch(err){e.target.checked=state.settings[name];message(err);}};
+for(const name of ['topmost','showDone','confirmDelete'])$(name).onchange=async e=>{const value=e.target.checked;try{if(name==='topmost'&&native)await invoke('set_topmost',{enabled:value});state.settings[name]=value;applyStyle();persist().catch(()=>{});}catch(err){e.target.checked=state.settings[name];message(err);}};
 $('autostart').onchange=async e=>{if(!native){e.target.checked=false;message('Автозапуск доступен в приложении Windows.');return;}try{await invoke('set_autostart',{enabled:e.target.checked});}catch(err){message(err);}try{e.target.checked=await invoke('autostart_enabled');}catch(err){message(err);}};
 $('color').oninput=e=>{state.settings.color=e.target.value;applyStyle();scheduleDraft();};
 $('transparency').oninput=e=>{state.settings.transparency=Number(e.target.value);$('opacityLabel').value=e.target.value+'%';applyStyle();scheduleDraft();};
@@ -101,16 +104,20 @@ $('recover').onclick=async()=>{if(!native)return;try{const value=await invoke('r
 $('startEmpty').onclick=async()=>{if(!confirm('Сохранить повреждённый файл отдельно и начать пустой список?'))return;try{if(native)await invoke('archive_corrupt');else localStorage.removeItem('checkoverlay-preview');recoverStart(fresh());}catch(e){$('recoveryError').textContent=String(e);}};
 async function bootAndRender(){
  if(native){try{boot=await invoke('boot_id');}catch(e){message('Не удалось определить загрузку Windows: '+e);}}
- cleanup(state,Date.now(),boot);render();await setMode(state.settings.mode);if(native)await win.setAlwaysOnTop(state.settings.topmost);ready=true;await persist();if(native)await win.show();
+ cleanup(state,Date.now(),boot);render();await setMode(state.settings.mode);if(native)await invoke('set_topmost',{enabled:state.settings.topmost});ready=true;await persist().catch(message);if(native)await win.show();
  if(native){
   let timer;const saveGeometry=()=>{clearTimeout(timer);timer=setTimeout(()=>rememberGeometry().catch(message),250);};
   unlisten.push(await win.onMoved(saveGeometry),await win.onResized(saveGeometry));
-  unlisten.push(await tauri.event.listen('app-action',async e=>{try{if(e.payload==='show'){await setMode('full');await win.show();await win.setFocus();}if(e.payload==='compact')await setMode('compact');if(e.payload==='settings'){await settings();await win.show();await win.setFocus();}if(e.payload==='topmost'){const next=!state.settings.topmost;await win.setAlwaysOnTop(next);state.settings.topmost=next;await persist();}if(e.payload==='hide')await hide();if(e.payload==='quit')await quit();}catch(err){message(err);}}));
+
  }
  setInterval(()=>{if(cleanup(state,Date.now(),boot))afterMutation();},15000);
  window.addEventListener('focus',()=>{if(cleanup(state,Date.now(),boot))afterMutation();});
 }
 async function init(){
+ if(native){
+  unlisten.push(await tauri.event.listen('app-action',async e=>{try{if(!ready){if(e.payload==='quit'){await exit();return;}if(e.payload==='hide'){await win.hide();return;}await win.show();await win.setFocus();return;}if(e.payload==='show'){await setMode('full');await win.show();await win.setFocus();}if(e.payload==='compact')await setMode('compact');if(e.payload==='settings'){await settings();await win.show();await win.setFocus();}if(e.payload==='topmost'){const next=!state.settings.topmost;await invoke('set_topmost',{enabled:next});state.settings.topmost=next;$('topmost').checked=next;await persist();}if(e.payload==='hide')await hide();if(e.payload==='quit')await quit();}catch(err){message(err);}}));
+ }
+
  if(!native)document.body.classList.add('browser-preview');
  try{const value=native?await invoke('load_state'):JSON.parse(localStorage.getItem('checkoverlay-preview')??'null');state=value?validateDocument(value):fresh();}
  catch(e){$('recoveryError').textContent=String(e);$('recovery').showModal();if(native)await win.show();return;}
