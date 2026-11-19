@@ -134,8 +134,11 @@ function makeEditor({text, label, onInput, onSave, onCancel, importRow = false})
   field.append(input, counter); controls.append(field, yes, no); area.append(controls, error);
   requestAnimationFrame(() => {
     if (!area.isConnected) return;
-    update(); input.focus(); input.setSelectionRange(input.value.length, input.value.length);
-    area.scrollIntoView({block:'nearest'});
+    update();
+    if (document.activeElement !== input) {
+      input.focus(); input.setSelectionRange(input.value.length, input.value.length);
+      area.scrollIntoView({block:'nearest'});
+    }
   });
   return area;
 }

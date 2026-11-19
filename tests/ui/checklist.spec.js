@@ -12,3 +12,11 @@ test('inline CRUD, persisted do-not-ask, done icon and mode',async({page})=>{
 test('overlong grapheme input is rejected; drafts survive reload, Escape cancels',async({page})=>{await page.getByRole('button',{name:'Добавить задачу',exact:true}).click();await page.getByRole('textbox',{name:'Новая задача'}).fill('Я'.repeat(81));await expect(page.getByRole('button',{name:'Сохранить задачу',exact:true})).toBeDisabled();await expect(page.getByRole('alert').filter({hasText:'Максимум 80 символов'})).toBeVisible();await expect(page.locator('#saveStatus')).toHaveText('Сохранено на компьютере');await page.reload();await expect(page.getByRole('textbox',{name:'Новая задача'})).toHaveValue('Я'.repeat(81));await page.getByRole('textbox').press('Escape');await expect(page.getByRole('textbox')).toHaveCount(0);});
 test('corrupt data is not overwritten by startup',async({page})=>{await page.evaluate(()=>localStorage.setItem('checkoverlay-preview','{broken'));await page.reload();await expect(page.locator('#recovery')).toBeVisible();expect(await page.evaluate(()=>localStorage.getItem('checkoverlay-preview'))).toBe('{broken');});
 test('empty list stays empty after reload',async({page})=>{await add(page,'Последняя');await page.getByText('Последняя',{exact:true}).click({button:'right'});await page.getByRole('button',{name:'Да',exact:true}).click();await expect(page.locator('#saveStatus')).toHaveText('Сохранено на компьютере');await page.reload();await expect(page.locator('.row')).toHaveCount(0);});
+
+test('a delayed editor frame does not steal selection from an already focused input',async({page})=>{
+ await page.addInitScript(()=>{window.editorFrames=[];window.requestAnimationFrame=fn=>{window.editorFrames.push(fn);return window.editorFrames.length;};});
+ await page.reload();await page.getByRole('button',{name:'Добавить задачу',exact:true}).click();
+ const input=page.getByRole('textbox',{name:'Новая задача'});await input.fill('Старый текст');await input.press('Control+a');
+ await page.evaluate(()=>{for(const fn of window.editorFrames.splice(0))fn(performance.now());});
+ await input.pressSequentially('Новый');await expect(input).toHaveValue('Новый');
+});
