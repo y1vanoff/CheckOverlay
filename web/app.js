@@ -362,7 +362,10 @@ async function setMode(mode) {
     if(native){
       const p=await win.outerPosition(),size=await win.innerSize();
       const old=state.settings.geometry[mode];
-      const monitor=await monitorFor({x:mode==='full'&&old?old.x:p.x,y:mode==='full'&&old?old.y:p.y,...size});
+      const collapsing=mode==='compact'&&from==='full'&&ready;
+      const probe=!collapsing&&old?{x:old.x,y:old.y,width:1,height:1}
+        :collapsing?{x:p.x+size.width-1,y:p.y,width:1,height:1}:{...p,...size};
+      const monitor=await monitorFor(probe);
       if(monitor){
         const scale=monitor.scaleFactor,area=monitor.workArea;
         let target;

@@ -1,4 +1,5 @@
-export const countText = s => [...new Intl.Segmenter('ru',{granularity:'grapheme'}).segment(s)].length;
+const textSegmenter = new Intl.Segmenter('ru',{granularity:'grapheme'});
+export const countText = s => [...textSegmenter.segment(s)].length;
 export const cleanText = s => String(s).replace(/[\r\n]+/g,' ').trim();
 export function validateText(s){const text=cleanText(s);if(!text)throw Error('Введите задачу');if(countText(text)>80)throw Error('Максимум 80 символов');return text;}
 export function fresh(){return {version:2,tasks:[],imports:[],draft:null,settings:{topmost:true,confirmDelete:true,showDone:true,color:'#D7E6EC',transparency:40,mode:'full',icon:null,geometry:{}},cleanup:{boundary:0,boot:null},trayHintSeen:false};}
@@ -49,7 +50,13 @@ export function suggestedImportName(s,filename){
 }
 export function parseTxt(text){
  if(typeof text!=='string'||text.includes('\0'))throw Error('Выберите текстовый файл UTF-8');
- return text.replace(/^\uFEFF/,'').split(/\r\n|\n|\r/).map((line,i)=>({line:i+1,text:line.trim()})).filter(r=>r.text).map(r=>({...r,valid:countText(r.text)<=80}));
+ const records=[];
+ for(const [i,line] of text.replace(/^\uFEFF/,'').split(/\r\n|\n|\r/).entries()){
+  const value=line.trim();if(!value)continue;
+  if(records.length>=5000)throw Error('Максимум 5000 задач в одном TXT');
+  records.push({line:i+1,text:value,valid:countText(value)<=80});
+ }
+ return records;
 }
 export function reviseImportRow(records,index,text){
  const value=validateText(text);if(!records[index])throw Error('Строка не найдена');

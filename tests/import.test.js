@@ -61,3 +61,8 @@ test('dirty input invalidates an older write before the debounce queues a new sn
  const old=save({text:''});await Promise.resolve();await Promise.resolve();save.dirty();release();await old;
  assert.equal(events.at(-1),'saving');assert.equal(events.includes('saved'),false);
 });
+
+test('oversized line count fails before constructing a huge preview; blanks do not count',()=>{
+ assert.equal(parseTxt(('\nЗадача\n').repeat(5000)).length,5000);
+ assert.throws(()=>parseTxt('Задача\n'.repeat(5001)),/5000/);
+});
