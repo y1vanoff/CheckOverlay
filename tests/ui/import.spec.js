@@ -40,3 +40,16 @@ test('approved typography, thin scrollbar, progress and an 80-character editor s
  await expect(page.locator('#count')).toHaveText('0 из 15');const geometry=await page.locator('#tasks').evaluate(e=>({font:getComputedStyle(e).fontFamily,bar:getComputedStyle(e,'::-webkit-scrollbar').width,overflow:e.scrollHeight>e.clientHeight}));expect(geometry.font).toContain('Montserrat Alternates');expect(geometry.bar).toBe('4px');expect(geometry.overflow).toBe(true);
  await page.locator('#add').click();await page.getByRole('textbox',{name:'Новая задача'}).fill('я'.repeat(80));const bounds=await page.locator('.editor').evaluate(e=>{const field=e.querySelector('.input-wrap').getBoundingClientRect(),counter=e.querySelector('.counter').getBoundingClientRect(),buttons=[...e.querySelectorAll('button')].map(b=>b.getBoundingClientRect());return {inside:counter.right<=field.right&&counter.bottom<=field.bottom,centers:buttons.every(b=>Math.abs(b.y+b.height/2-field.y-field.height/2)<1)};});expect(bounds.inside).toBe(true);expect(bounds.centers).toBe(true);
 });
+
+test('rapid replay stays a single transaction while native persistence is pending',async({page})=>{
+ await page.addInitScript(()=>{
+  const seed={version:2,tasks:[],imports:[{id:'saved',name:'Готовый список',tasks:['Первая']}],draft:null,settings:{topmost:true,confirmDelete:true,showDone:true,color:'#D7E6EC',transparency:40,mode:'full',icon:null,geometry:{}},cleanup:{boundary:0,boot:null}};
+  window.batchWrites=0;const w={outerPosition:async()=>({x:0,y:0}),innerSize:async()=>({width:320,height:470}),scaleFactor:async()=>1,onMoved:async()=>()=>{},onResized:async()=>()=>{}};
+  for(const n of ['setMinSize','setMaxSize','setResizable','setSize','setPosition','show','hide','setFocus','startDragging'])w[n]=async()=>{};
+  const m={scaleFactor:1,workArea:{position:{x:0,y:0},size:{width:1920,height:1080}}};class Size{constructor(width,height){Object.assign(this,{width,height});}}class Pos{constructor(x,y){Object.assign(this,{x,y});}}
+  window.__TAURI__={core:{invoke:async(name,args)=>{if(name==='load_state')return seed;if(name==='boot_id')return 'boot';if(name==='save_state'&&args.value.tasks.length){window.batchWrites++;await new Promise(resolve=>{window.finishWrite=resolve;});window.lastSaved=args.value;}}},window:{getCurrentWindow:()=>w,availableMonitors:async()=>[m],primaryMonitor:async()=>m},dpi:{LogicalSize:Size,PhysicalPosition:Pos},event:{listen:async()=>()=>{}}};
+ });
+ await page.reload();await expect(page.locator('html')).toHaveAttribute('data-save-status','saved');await open(page);
+ await page.getByRole('button',{name:'Готовый список',exact:true}).dblclick();await expect.poll(()=>page.evaluate(()=>window.batchWrites)).toBe(1);
+ await page.evaluate(()=>window.finishWrite());await expect(page.locator('#toast')).toBeVisible();expect(await page.evaluate(()=>window.lastSaved.tasks.length)).toBe(1);
+});

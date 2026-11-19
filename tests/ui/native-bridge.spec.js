@@ -14,6 +14,7 @@ async function nativeGeometry(page){
   window.__TAURI__={core:{invoke:async(name,args)=>{
    window.calls.push({name,args});if(name==='load_state')return seed;if(name==='boot_id')return 'boot-test';
    if(name==='transition_window'){position={x:args.x,y:args.y};size={width:args.width,height:args.height};}
+   if(name==='choose_txt')return {name:'demo.txt',text:'Одна\n'+'я'.repeat(81)};
   }},window:{getCurrentWindow:()=>w,availableMonitors:async()=>[m],primaryMonitor:async()=>m},dpi:{LogicalSize:Size,PhysicalPosition:Pos},event:{listen:async()=>()=>{}}};
  },seed);
  await page.goto('/');await expect(page.locator('html')).toHaveAttribute('data-save-status','saved');
@@ -35,6 +36,12 @@ test('collapse anchors to the current top-right at 150% and restores full geomet
 test('system reduced-motion preference disables the native window animation',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await nativeGeometry(page);await page.getByRole('button',{name:'Свернуть в иконку',exact:true}).click();await expect(page.locator('#compact')).toBeVisible();
  expect(await page.evaluate(()=>window.calls.filter(x=>x.name==='transition_window').at(-1).args.animate)).toBe(false);
+});
+
+test('import actions remain inside a small native viewport',async({page})=>{
+ await page.setViewportSize({width:400,height:340});await nativeGeometry(page);
+ await page.getByRole('button',{name:'Импорт задач',exact:true}).click();await page.locator('#chooseTxt').click();await expect(page.locator('#importPreview')).toBeVisible();
+ const layout=await page.locator('#app').evaluate(e=>{const a=e.getBoundingClientRect(),b=e.querySelector('#commitImport').getBoundingClientRect();return {bottom:b.bottom<=a.bottom,top:b.top>=a.top};});expect(layout).toEqual({bottom:true,top:true});
 });
 test('failed startup write still exposes window and retry; compact mode clears material',async({page})=>{
  await page.addInitScript(()=>{window.calls=[];const hit=(name,...args)=>{window.calls.push({name,args});return Promise.resolve();};class Size{constructor(width,height){this.width=width;this.height=height;}}class Pos{constructor(x,y){this.x=x;this.y=y;}}const w={outerPosition:async()=>({x:10,y:10}),innerSize:async()=>({width:380,height:640}),scaleFactor:async()=>1,onMoved:async()=>()=>{},onResized:async()=>()=>{}};for(const name of ['setMinSize','setMaxSize','setResizable','setSize','setPosition','setAlwaysOnTop','show','hide','setFocus','startDragging'])w[name]=(...args)=>hit(name,...args);const m={scaleFactor:1,workArea:{position:{x:0,y:0},size:{width:1920,height:1040}}};window.__TAURI__={core:{invoke:async(name,args)=>{window.calls.push({name,args});if(name==='load_state')return null;if(name==='boot_id')return 'boot-test';if(name==='save_state')throw Error('disk unavailable');}},window:{getCurrentWindow:()=>w,availableMonitors:async()=>[m],primaryMonitor:async()=>m},dpi:{LogicalSize:Size,PhysicalPosition:Pos},event:{listen:async()=>()=>{}}};});

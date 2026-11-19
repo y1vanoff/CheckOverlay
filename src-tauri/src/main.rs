@@ -8,7 +8,13 @@ use tauri_plugin_autostart::ManagerExt;
 struct DiskLock(Mutex<()>);
 #[derive(Default)]
 struct WindowShape { compact: AtomicBool, last: Mutex<Option<(u32,u32,i32,bool)>> }
-fn dir(app: &tauri::AppHandle) -> Result<PathBuf,String> { let p=app.path().app_data_dir().map_err(|e|e.to_string())?;fs::create_dir_all(&p).map_err(|e|e.to_string())?;Ok(p) }
+fn dir(app: &tauri::AppHandle) -> Result<PathBuf,String> {
+ // An explicit developer launch must not migrate or clean the owner's real list.
+ let p=if std::env::args().any(|arg|arg=="--smoke-test"){
+  std::env::temp_dir().join(format!("checkoverlay-smoke-{}",std::process::id()))
+ }else{app.path().app_data_dir().map_err(|e|e.to_string())?};
+ fs::create_dir_all(&p).map_err(|e|e.to_string())?;Ok(p)
+}
 fn data_file(app: &tauri::AppHandle) -> Result<PathBuf,String>{Ok(dir(app)?.join("state.json"))}
 fn error(e: impl std::fmt::Display)->String{e.to_string()}
 #[tauri::command]
