@@ -53,3 +53,8 @@ test('rapid replay stays a single transaction while native persistence is pendin
  await page.getByRole('button',{name:'Готовый список',exact:true}).dblclick();await expect.poll(()=>page.evaluate(()=>window.batchWrites)).toBe(1);
  await page.evaluate(()=>window.finishWrite());await expect(page.locator('#toast')).toBeVisible();expect(await page.evaluate(()=>window.lastSaved.tasks.length)).toBe(1);
 });
+
+test('short browser viewport can scroll to import actions without trapping them outside the page',async({page})=>{
+ await page.setViewportSize({width:400,height:480});await open(page);await txt(page,'Первая\nВторая');
+ await page.locator('#importName').fill('Короткое окно');await commit(page);await expect(page.locator('#tasks .row')).toHaveCount(2);
+});

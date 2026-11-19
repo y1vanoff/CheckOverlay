@@ -15,6 +15,12 @@ jobs:
       - run: npm test
       - run: npx playwright install chromium
       - run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: UI-failure-diagnostics
+          path: test-results/
+          retention-days: 7
   windows-build:
     runs-on: windows-2022
     steps:
