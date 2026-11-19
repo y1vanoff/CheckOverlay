@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "revision": "1.1",
+  "approvedOn": "2026-11-19",
+  "status": "design-approved-spec-awaiting-pr-acceptance",
+  "format": "PNG",
+  "scale": 1,
+  "source": "Согласованные макеты после окончательных правок владельца проекта",
+  "publication": "Нейтральные примеры задач; персональные пути и внутренние идентификаторы исключены",
+  "screens": [
+    {
+      "file": "screens/00-main.png",
+      "name": "Главный экран · Montserrat Alternates",
+      "width": 320,
+      "height": 470,
+      "bytes": 75666,
+      "gitBlobSha": "0fe1e5c727f543cfbd7c4c8e72da7021e85790bf"
+    },
+    {
+      "file": "screens/01-compact-default.png",
+      "name": "01 · Компактный режим / 100 × 100",
+      "width": 100,
+      "height": 100,
+      "bytes": 7857,
+      "gitBlobSha": "d32392c72b2e8977bdbc0275f1ffca45604d8072"
+    },
+    {
+      "file": "screens/02-add-task.png",
+      "name": "Добавление задачи · Montserrat Alternates",
+      "width": 320,
+      "height": 470,
+      "bytes": 76753,
+      "gitBlobSha": "796f2de572ade1cc912dda8236200bc38329039e"
+    },
+    {
+      "file": "screens/03-long-task-80.png",
+      "name": "Длинные задачи · 80 / 80 символов",
+      "width": 320,
+      "height": 550,
+      "bytes": 95221,
+      "gitBlobSha": "6a46d41a619ba8eafbea2f1af0141520a50b3761"
+    },
+    {
+      "file": "screens/04-task-saved.png",
+      "name": "04 · Новая задача сохранена",
+      "width": 320,
+      "height": 518,
+      "bytes": 83766,
+      "gitBlobSha": "caaa4f4645fded44c3a9c2315d3e3837f7aa23c9"
+    },
+    {
+      "file": "screens/05-edit-inline.png",
+      "name": "05 · Изменение задачи в строке",
+      "width": 320,
+      "height": 470,
+      "bytes": 75446,
+      "gitBlobSha": "559dbf1847d4565946c4d1ca5ccffb5c1cb07d59"
+    },
+    {
+      "file": "screens/06-delete-confirmation.png",
+      "name": "06 · Подтверждение удаления",
+      "width": 320,
+      "height": 470,
+      "bytes": 62489,
+      "gitBlobSha": "a99ca0359229d8181ca658c0d06fb2223dff2fc0"
+    },
+    {
+      "file": "screens/07-delete-no-confirm.png",
+      "name": "07 · Больше не спрашивать",
+      "width": 320,
+      "height": 470,
+      "bytes": 62662,
+      "gitBlobSha": "f946943494c15fff2ca8b09277baf63e6a5f106b"
+    },
+    {
+      "file": "screens/08-delete-toast.png",
+      "name": "08 · Задача удалена / Отмена",
+      "width": 320,
+      "height": 470,
+      "bytes": 72668,
+      "gitBlobSha": "9242500f5c30be116c3c330e82f24edefc7dffe7"
+    },
+    {
+      "file": "screens/09-empty-list.png",
+      "name": "09 · Пустой список",
+      "width": 320,
+      "height": 470,
+      "bytes": 66940,
+      "gitBlobSha": "994534e9eb2bdf71e0c0701a5edeaf9fbd338a3c"
+    },
+    {
+      "file": "screens/10-settings-general.png",
+      "name": "10 · Настройки / Общие",
+      "width": 320,
+      "height": 470,
+      "bytes": 83437,
+      "gitBlobSha": "721bffe421f779b08184d4c97ec88daf85d38502"
+    },
+    {
+      "file": "screens/11-settings-appearance.png",
+      "name": "11 · Настройки / Внешний вид",
+      "width": 320,
+      "height": 470,
+      "bytes": 70037,
+      "gitBlobSha": "850ffdacebf8fa5519f19b6cc2f4f66e5844b973"
+    },
+    {
+      "file": "screens/12-settings-icon.png",
+      "name": "12 · Настройки / Иконка",
+      "width": 320,
+      "height": 470,
+      "bytes": 74153,
+      "gitBlobSha": "9d6fc56626eb7ed528fc7ba209d1c01b6940ca5c"
+    },
+    {
+      "file": "screens/13-tray-menu.png",
+      "name": "13 · Меню трея и компактного режима",
+      "width": 240,
+      "height": 265,
+      "bytes": 33410,
+      "gitBlobSha": "abaab97be4c0850dda2576d1ea84bbb0b2e74a0d"
+    },
+    {
+      "file": "screens/14-custom-icon.png",
+      "name": "14 · Иконка / своё изображение",
+      "width": 320,
+      "height": 470,
+      "bytes": 68657,
+      "gitBlobSha": "399defd99707b08f562a4b12662d1d6dc344b886"
+    },
+    {
+      "file": "screens/15-compact-custom.png",
+      "name": "15 · Компактный режим / своё изображение",
+      "width": 100,
+      "height": 100,
+      "bytes": 3065,
+      "gitBlobSha": "edb79b9a978c545d714b56553a4293cc2d8d0b5d"
+    },
+    {
+      "file": "screens/16-image-error.png",
+      "name": "16 · Ошибка выбора изображения",
+      "width": 320,
+      "height": 470,
+      "bytes": 64281,
+      "gitBlobSha": "8af1e062cea5d2c7d918099f28827abdcf3f378d"
+    },
+    {
+      "file": "screens/17-color-picker.png",
+      "name": "17 · Выбор своего цвета",
+      "width": 320,
+      "height": 470,
+      "bytes": 80020,
+      "gitBlobSha": "acbc423cfbf381b0c70963787f95b3222303af15"
+    },
+    {
+      "file": "screens/18-list-scrollbar.png",
+      "name": "18 · Список / импорт в шапке и тонкий скролл-бар",
+      "width": 320,
+      "height": 470,
+      "bytes": 79241,
+      "gitBlobSha": "72d96b20bc3292cd5749d4436225aaf572bd3c52"
+    },
+    {
+      "file": "screens/19-import-home.png",
+      "name": "19 · Новый импорт / TXT и сохранённые списки",
+      "width": 320,
+      "height": 758,
+      "bytes": 104209,
+      "gitBlobSha": "9ccda7e7f963ae5d3e59b602966f9829f0fc20ff"
+    },
+    {
+      "file": "screens/20-import-preview.png",
+      "name": "20 · Новый импорт / имя и предпросмотр",
+      "width": 320,
+      "height": 730,
+      "bytes": 124838,
+      "gitBlobSha": "07f79f5e8c1c48dc6f58aef69727aaff097dcb4b"
+    },
+    {
+      "file": "screens/21-import-inline-edit.png",
+      "name": "21 · Импорт / правка длинной строки",
+      "width": 320,
+      "height": 730,
+      "bytes": 119648,
+      "gitBlobSha": "1a25fbed8fa4c353699f21e70443529f491554e9"
+    },
+    {
+      "file": "screens/22-import-toast.png",
+      "name": "22 · Список / уведомление об импорте · 2,5 с",
+      "width": 320,
+      "height": 470,
+      "bytes": 75899,
+      "gitBlobSha": "f7e79dce24723686b53ba6d754688e74f987fc5e"
+    },
+    {
+      "file": "screens/23-import-empty.png",
+      "name": "23 · Импорт / в файле нет задач",
+      "width": 320,
+      "height": 550,
+      "bytes": 75413,
+      "gitBlobSha": "d230d2d58be37c5a37eea3fa62afe764949a3b29"
+    },
+    {
+      "file": "screens/25-import-repeat-toast.png",
+      "name": "25 · Список / повторный импорт · уведомление",
+      "width": 320,
+      "height": 470,
+      "bytes": 75867,
+      "gitBlobSha": "362bdac7ef694f4e22f94ba537f599e6c8fa507d"
+    },
+    {
+      "file": "screens/26-import-name-conflict.png",
+      "name": "26 · Импорт / имя уже занято",
+      "width": 320,
+      "height": 730,
+      "bytes": 125508,
+      "gitBlobSha": "c64fa882f4d1ab3301c761f4e0436b3c185f9aad"
+    }
+  ]
+}
