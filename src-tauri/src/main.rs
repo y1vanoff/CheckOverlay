@@ -2,10 +2,12 @@
 use base64::{engine::general_purpose::STANDARD, Engine};
 use image::{AnimationDecoder, ImageFormat};
 use serde_json::Value;
-use std::{fs::{self, File}, io::{Cursor, Write}, path::{Path, PathBuf}, sync::Mutex};
+use std::{fs::{self, File}, io::{Cursor, Write}, path::{Path, PathBuf}, sync::{Mutex, atomic::{AtomicBool, Ordering}}};
 use tauri::{Emitter, Manager, menu::{CheckMenuItem, Menu, MenuItem}, tray::{TrayIconBuilder, TrayIconEvent, MouseButton, MouseButtonState}};
 use tauri_plugin_autostart::ManagerExt;
 struct DiskLock(Mutex<()>);
+#[derive(Default)]
+struct WindowShape { compact: AtomicBool, last: Mutex<Option<(u32,u32,i32,bool)>> }
 fn dir(app: &tauri::AppHandle) -> Result<PathBuf,String> { let p=app.path().app_data_dir().map_err(|e|e.to_string())?;fs::create_dir_all(&p).map_err(|e|e.to_string())?;Ok(p) }
 fn data_file(app: &tauri::AppHandle) -> Result<PathBuf,String>{Ok(dir(app)?.join("state.json"))}
 fn error(e: impl std::fmt::Display)->String{e.to_string()}
@@ -27,7 +29,7 @@ fn replace(from:&Path,to:&Path)->Result<(),String>{fs::rename(from,to).map_err(e
 #[tauri::command]
 fn save_state(app:tauri::AppHandle,value:Value,lock:tauri::State<DiskLock>)->Result<(),String>{
  let _guard=lock.0.lock().map_err(error)?;
- if value["version"]!=1||!value["tasks"].is_array(){return Err("Некорректные данные".into());}
+ if !matches!(value["version"].as_u64(),Some(1|2))||!value["tasks"].is_array()||(value["version"]==2&&!value["imports"].is_array()){return Err("Некорректные данные".into());}
  let bytes=serde_json::to_vec(&value).map_err(error)?;if bytes.len()>2_000_000{return Err("Файл данных слишком большой".into());}
  let target=data_file(&app)?;let temp=target.with_extension("tmp");{let mut file=File::create(&temp).map_err(error)?;file.write_all(&bytes).map_err(error)?;file.sync_all().map_err(error)?;}replace(&temp,&target)?;
  Ok(())
@@ -82,11 +84,86 @@ fn read_icon(app:tauri::AppHandle,name:String,reduce_motion:bool)->Result<String
  if reduce_motion&&ext=="gif"{let image=image::load_from_memory(&bytes).map_err(error)?;let mut output=Cursor::new(Vec::new());image.write_to(&mut output,ImageFormat::Png).map_err(error)?;return Ok(format!("data:image/png;base64,{}",STANDARD.encode(output.into_inner())));}
  Ok(format!("data:image/{};base64,{}",if ext=="jpg"{"jpeg"}else{ext},STANDARD.encode(bytes)))
 }
+fn txt_document(name:&str,bytes:&[u8])->Result<Value,String>{
+ if !Path::new(name).extension().and_then(|v|v.to_str()).is_some_and(|ext|ext.eq_ignore_ascii_case("txt")){return Err("Поддерживаются только файлы .txt".into());}
+ if bytes.len()>1024*1024{return Err("Максимальный размер TXT — 1 МБ".into());}
+ let text=std::str::from_utf8(bytes).map_err(|_|"Выберите текстовый файл в кодировке UTF-8".to_string())?;
+ if text.contains('\0'){return Err("Выберите обычный текстовый файл UTF-8".into());}
+ Ok(serde_json::json!({"name":name,"text":text}))
+}
+#[tauri::command]
+fn choose_txt()->Result<Option<Value>,String>{
+ let Some(path)=rfd::FileDialog::new().add_filter("Список задач TXT",&["txt"]).pick_file() else{return Ok(None)};
+ if fs::metadata(&path).map_err(error)?.len()>1024*1024{return Err("Максимальный размер TXT — 1 МБ".into());}
+ let name=path.file_name().ok_or("Некорректное имя TXT")?.to_string_lossy();
+ txt_document(&name,&fs::read(&path).map_err(error)?).map(Some)
+}
+fn apply_window_shape(w:&tauri::WebviewWindow)->Result<(),String>{
+ #[cfg(windows)]{
+  use windows_sys::Win32::Graphics::Gdi::{CreateRoundRectRgn,DeleteObject,SetWindowRgn};
+  let state=w.state::<WindowShape>();
+  let compact=state.compact.load(Ordering::Relaxed);
+  let size=w.outer_size().map_err(error)?;
+  if size.width==0||size.height==0{return Ok(());}
+  let diameter=(48.0*w.scale_factor().map_err(error)?).round() as i32;
+  let key=(size.width,size.height,diameter,compact);
+  // Changing a region can send window-position messages synchronously.
+  let Ok(mut last)=state.last.try_lock() else{return Ok(())};
+  if *last==Some(key){return Ok(());}
+  let hwnd=w.hwnd().map_err(error)?.0 as _;
+  let region=if compact{std::ptr::null_mut()}else{
+   let region=unsafe{CreateRoundRectRgn(0,0,size.width as i32+1,size.height as i32+1,diameter,diameter)};
+   if region.is_null(){return Err(std::io::Error::last_os_error().to_string());}region
+  };
+  if unsafe{SetWindowRgn(hwnd,region,1)}==0{
+   if !region.is_null(){unsafe{DeleteObject(region as _);}}
+   return Err(std::io::Error::last_os_error().to_string());
+  }
+  // On success Windows owns region; deleting it here would corrupt clipping.
+  *last=Some(key);
+ }
+ #[cfg(not(windows))]let _=w;
+ Ok(())
+}
 #[tauri::command]
 fn set_material(app:tauri::AppHandle,compact:bool)->Result<(),String>{
  let w=app.get_webview_window("main").ok_or("Окно недоступно")?;
- #[cfg(windows)]{if compact{let _=window_vibrancy::clear_acrylic(&w);}else{let _=window_vibrancy::apply_acrylic(&w,Some((230,240,246,100)));}}
- Ok(())
+ app.state::<WindowShape>().compact.store(compact,Ordering::Relaxed);
+ w.set_background_color(Some(tauri::window::Color(0,0,0,0))).map_err(error)?;
+ apply_window_shape(&w)
+}
+#[tauri::command]
+async fn transition_window(app:tauri::AppHandle,x:i32,y:i32,width:u32,height:u32,animate:bool)->Result<(),String>{
+ if width==0||height==0||width>32768||height>32768{return Err("Некорректный размер окна".into());}
+ let w=app.get_webview_window("main").ok_or("Окно недоступно")?;
+ let from=w.outer_position().map_err(error)?;
+ let inner=w.inner_size().map_err(error)?;
+ let outer=w.outer_size().map_err(error)?;
+ #[cfg(windows)]{
+  use windows_sys::Win32::UI::WindowsAndMessaging::{SetWindowPos,SWP_NOZORDER,SWP_NOACTIVATE};
+  let hwnd=w.hwnd().map_err(error)?.0 as isize;
+  let outer_width=width+outer.width.saturating_sub(inner.width);
+  let outer_height=height+outer.height.saturating_sub(inner.height);
+  tauri::async_runtime::spawn_blocking(move||{
+   let start=std::time::Instant::now();
+   loop{
+    let p=if animate{(start.elapsed().as_secs_f64()/0.22).min(1.0)}else{1.0};
+    let k=p*p*(3.0-2.0*p);
+    let mix=|a:f64,b:f64|(a+(b-a)*k).round() as i32;
+    let ok=unsafe{SetWindowPos(hwnd as _,std::ptr::null_mut(),mix(from.x as f64,x as f64),mix(from.y as f64,y as f64),mix(outer.width as f64,outer_width as f64),mix(outer.height as f64,outer_height as f64),SWP_NOZORDER|SWP_NOACTIVATE)};
+    if ok==0{return Err(std::io::Error::last_os_error().to_string());}
+    if p>=1.0{break;}
+    std::thread::sleep(std::time::Duration::from_millis(10));
+   }
+   Ok::<(),String>(())
+  }).await.map_err(error)??;
+ }
+ #[cfg(not(windows))]{
+  let _=(from,inner,outer,animate);
+  w.set_size(tauri::PhysicalSize::new(width,height)).map_err(error)?;
+  w.set_position(tauri::PhysicalPosition::new(x,y)).map_err(error)?;
+ }
+ apply_window_shape(&w)
 }
 #[tauri::command]
 fn set_topmost(app:tauri::AppHandle,enabled:bool)->Result<(),String>{
@@ -103,8 +180,16 @@ fn main(){
   .plugin(tauri_plugin_single_instance::init(|app,_,_|{if let Some(w)=app.get_webview_window("main"){let _=w.show();let _=w.set_focus();let _=app.emit("app-action","show");}}))
   .plugin(tauri_plugin_autostart::init(tauri_plugin_autostart::MacosLauncher::LaunchAgent,None))
   .manage(DiskLock(Mutex::new(())))
-  .invoke_handler(tauri::generate_handler![load_state,save_state,archive_corrupt,recover_state,autostart_enabled,set_autostart,boot_id,choose_image,read_icon,set_material,set_topmost,quit_app,popup_menu])
-  .on_window_event(|window,event|{if let tauri::WindowEvent::CloseRequested{api,..}=event{api.prevent_close();let _=window.emit("app-action","hide");}})
+  .manage(WindowShape::default())
+  .invoke_handler(tauri::generate_handler![load_state,save_state,archive_corrupt,recover_state,autostart_enabled,set_autostart,boot_id,choose_image,read_icon,choose_txt,transition_window,set_material,set_topmost,quit_app,popup_menu])
+  .on_window_event(|window,event|{
+   match event {
+    tauri::WindowEvent::CloseRequested{api,..}=>{api.prevent_close();let _=window.emit("app-action","hide");},
+    tauri::WindowEvent::Resized(_)|tauri::WindowEvent::ScaleFactorChanged{..}=>{
+     if let Some(w)=window.app_handle().get_webview_window("main"){if let Err(e)=apply_window_shape(&w){let _=window.emit("native-error",e);}}
+    },_=>{}
+   }
+  })
   .setup(|app|{
    let show=MenuItem::with_id(app,"show","Показать чеклист",true,None::<&str>)?;
    let compact=MenuItem::with_id(app,"compact","Компактный режим",true,None::<&str>)?;
@@ -118,7 +203,7 @@ fn main(){
     .on_menu_event(|app,event|{let _=app.emit("app-action",event.id().as_ref());})
     .on_tray_icon_event(|tray,event|{if matches!(event,TrayIconEvent::Click{button:MouseButton::Left,button_state:MouseButtonState::Up,..}){let app=tray.app_handle();if let Some(w)=app.get_webview_window("main"){let _=w.show();let _=w.set_focus();}let _=app.emit("app-action","show");}}).build(app)?;
    app.manage(tray);
-   #[cfg(windows)]if let Some(w)=app.get_webview_window("main"){let _=window_vibrancy::apply_acrylic(&w,Some((230,240,246,100)));}
+   if let Some(w)=app.get_webview_window("main"){w.set_background_color(Some(tauri::window::Color(0,0,0,0)))?;apply_window_shape(&w).map_err(std::io::Error::other)?;}
    Ok(())
   }).run(tauri::generate_context!()).expect("Не удалось запустить CheckOverlay");
 }
@@ -131,6 +216,15 @@ mod tests {
  fn windows_boot_guid_is_stable_and_nonzero(){let first=boot_id().unwrap();assert_eq!(first.len(),32);assert!(first.chars().any(|c|c!='0'));assert_eq!(first,boot_id().unwrap());}
  #[test]
  fn replacement_preserves_complete_json(){let folder=std::env::temp_dir().join(format!("checkoverlay-test-{}",uuid::Uuid::new_v4()));fs::create_dir(&folder).unwrap();let old=folder.join("state.json");let next=folder.join("state.tmp");fs::write(&old,b"old").unwrap();fs::write(&next,b"new").unwrap();replace(&next,&old).unwrap();assert_eq!(fs::read(&old).unwrap(),b"new");fs::remove_file(old).unwrap();fs::remove_dir(folder).unwrap();}
+ #[test]
+ fn txt_is_utf8_only_and_rejects_other_extensions(){
+  let value=txt_document("tasks.TXT","\u{feff}Первое\r\nВторое".as_bytes()).unwrap();
+  assert_eq!(value["name"],"tasks.TXT");assert!(value["text"].as_str().unwrap().contains("Второе"));
+  assert!(txt_document("tasks.md",b"- task").is_err());
+  assert!(txt_document("tasks.txt",&[0xff,0xfe]).is_err());
+  assert!(txt_document("tasks.txt",b"a\0b").is_err());
+  assert!(txt_document("tasks.txt",&vec![b'a';1024*1024+1]).is_err());
+ }
  #[test]
  fn image_validation_accepts_png_and_rejects_invalid(){assert_eq!(check_image(include_bytes!("../icons/32x32.png")).unwrap(),"png");assert!(check_image(b"not an image").is_err());}
 }
