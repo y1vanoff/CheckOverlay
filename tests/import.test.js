@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {fresh,validateDocument,parseTxt,saveImport,repeatImport,removeBatch,restoreTask,removeTask,rows,validateImportName,suggestedImportName,reviseImportRow,countText,compactTarget} from '../web/core.js';
+import {fresh,validateDocument,parseTxt,saveImport,repeatImport,removeBatch,restoreTask,removeTask,rows,validateImportName,suggestedImportName,reviseImportRow,countText,compactTarget,startDraft,saveDraft} from '../web/core.js';
 
 const ids=()=>{let i=0;return()=>`id-${++i}`;};
 test('version 1 migration keeps tasks, draft and settings without changing source',()=>{
@@ -65,4 +65,11 @@ test('dirty input invalidates an older write before the debounce queues a new sn
 test('oversized line count fails before constructing a huge preview; blanks do not count',()=>{
  assert.equal(parseTxt(('\nЗадача\n').repeat(5000)).length,5000);
  assert.throws(()=>parseTxt('Задача\n'.repeat(5001)),/5000/);
+});
+
+test('undo restores a deleted tail before a newer task that reused its order',()=>{
+ const s=fresh(),next=ids();saveImport(s,'Список',parseTxt('Первая\nУдалённая'),next);
+ const deleted={...s.tasks[1]};removeTask(s,deleted.id);startDraft(s);s.draft.text='Новая';saveDraft(s,'new');
+ assert.equal(s.tasks.at(-1).order,deleted.order);restoreTask(s,deleted);
+ assert.deepEqual(rows(s).map(t=>t.text),['Первая','Удалённая','Новая']);assert.equal(new Set(s.tasks.map(t=>t.order)).size,3);
 });

@@ -81,6 +81,10 @@ export function repeatImport(s,id,idFactory=()=>crypto.randomUUID()){
  const added=batch(entry.tasks,id,s,idFactory);s.tasks.push(...added.tasks);return added;
 }
 export function removeBatch(s,id){const ids=new Set(s.tasks.filter(t=>t.batchId===id).map(t=>t.id));s.tasks=s.tasks.filter(t=>!ids.has(t.id));if(ids.has(s.draft?.id))s.draft=null;}
-export function restoreTask(s,task){if(s.tasks.some(t=>t.id===task.id)||task.done&&task.completedAt<=s.cleanup.boundary)return false;s.tasks.push({...task});return true;}
+export function restoreTask(s,task){
+ if(s.tasks.some(t=>t.id===task.id)||task.done&&task.completedAt<=s.cleanup.boundary)return false;
+ if(s.tasks.some(t=>t.order===task.order))for(const t of s.tasks)if(t.order>=task.order)t.order++;
+ s.tasks.push({...task});return true;
+}
 export function compactTarget(rect,scale,area){const size=Math.round(100*scale);return {x:Math.round(Math.min(Math.max(rect.x+rect.width-size,area.x),area.x+area.width-size)),y:Math.round(Math.min(Math.max(rect.y,area.y),area.y+area.height-size)),width:size,height:size};}
 export function makeSaver(write,status){let chain=Promise.resolve();let revision=0;const saver=snapshot=>{const own=++revision;status('saving');const copy=JSON.parse(JSON.stringify(snapshot));const job=chain.catch(()=>{}).then(()=>write(copy));chain=job;return job.then(()=>{if(own===revision)status('saved');},e=>{if(own===revision)status('error',e);throw e;});};saver.dirty=()=>{revision++;status('saving');};return saver;}
