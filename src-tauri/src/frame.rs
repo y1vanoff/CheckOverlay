@@ -22,7 +22,7 @@ mod windows {
  // Must run on the window's owning UI thread (Tauri setup).
  pub fn install(hwnd:HWND)->Result<(),String>{
   let policy=DWMNCRP_DISABLED;
-  let hr=unsafe{DwmSetWindowAttribute(hwnd,DWMWA_NCRENDERING_POLICY,&policy as *const _ as _,std::mem::size_of_val(&policy) as u32)};
+  let hr=unsafe{DwmSetWindowAttribute(hwnd,DWMWA_NCRENDERING_POLICY as u32,&policy as *const _ as _,std::mem::size_of_val(&policy) as u32)};
   if hr<0{return Err(format!("Не удалось отключить системную рамку: {hr:#x}"));}
   if unsafe{SetWindowSubclass(hwnd,Some(frame_proc),FRAME_SUBCLASS,0)}==0{return Err("Не удалось отключить системную отрисовку рамки".into());}
   Ok(())
@@ -43,7 +43,7 @@ mod windows {
      assert_ne!(SendMessageW(hwnd,WM_NCACTIVATE,active,0),0);
      assert_eq!(SendMessageW(hwnd,WM_NCPAINT,1,0),0);
      let mut enabled:i32=1;
-     assert!(DwmGetWindowAttribute(hwnd,DWMWA_NCRENDERING_ENABLED,&mut enabled as *mut _ as _,4)>=0);
+     assert!(DwmGetWindowAttribute(hwnd,DWMWA_NCRENDERING_ENABLED as u32,&mut enabled as *mut _ as _,4)>=0);
      assert_eq!(enabled,0);
     }
     // Unrelated messages still reach the original procedure.
