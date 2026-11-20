@@ -104,6 +104,22 @@ fn choose_txt()->Result<Option<Value>,String>{
  let name=path.file_name().ok_or("Некорректное имя TXT")?.to_string_lossy();
  txt_document(&name,&fs::read(&path).map_err(error)?).map(Some)
 }
+fn webview_drag_payload(event:&tauri::WebviewEvent)->Result<Option<Value>,String>{
+ match event {
+  tauri::WebviewEvent::DragDrop(tauri::DragDropEvent::Enter{..})=>{
+   Ok(Some(serde_json::json!({"type":"enter"})))
+  },
+  tauri::WebviewEvent::DragDrop(tauri::DragDropEvent::Drop{paths,..})=>{
+   if paths.len()!=1{return Err("Перетащите один файл TXT".to_string());}
+   let path=&paths[0];
+   if fs::metadata(path).map_err(error)?.len()>1024*1024{return Err("Максимальный размер TXT — 1 МБ".into());}
+   let name=path.file_name().ok_or("Некорректное имя TXT")?.to_string_lossy();
+   let file=txt_document(&name,&fs::read(path).map_err(error)?)?;
+   Ok(Some(serde_json::json!({"type":"drop","file":file})))
+  },
+  _=>Ok(None)
+ }
+}
 fn apply_window_shape(w:&tauri::WebviewWindow)->Result<(),String>{
  #[cfg(windows)]{
   use windows_sys::Win32::Graphics::Gdi::{CreateRoundRectRgn,DeleteObject,SetWindowRgn};
@@ -198,24 +214,16 @@ fn main(){
   .manage(DiskLock(Mutex::new(())))
   .manage(WindowShape::default())
   .invoke_handler(tauri::generate_handler![load_state,save_state,archive_corrupt,recover_state,autostart_enabled,set_autostart,boot_id,choose_image,read_icon,choose_txt,transition_window,set_material,set_topmost,quit_app,popup_menu])
+  // WebView2 delivers Explorer drag/drop to the webview, not the outer window.
+  .on_webview_event(|webview,event|{
+   match webview_drag_payload(event) {
+    Ok(Some(payload))=>{let _=webview.emit("native-file-drag",payload);},
+    Ok(None)=>{},
+    Err(e)=>{let _=webview.emit("native-error",e);}
+   }
+  })
   .on_window_event(|window,event|{
    match event {
-    tauri::WindowEvent::DragDrop(tauri::DragDropEvent::Enter{..})=>{
-     let _=window.emit("native-file-drag",serde_json::json!({"type":"enter"}));
-    },
-    tauri::WindowEvent::DragDrop(tauri::DragDropEvent::Drop{paths,..})=>{
-     let result=(||{
-      if paths.len()!=1{return Err("Перетащите один файл TXT".to_string());}
-      let path=&paths[0];
-      if fs::metadata(path).map_err(error)?.len()>1024*1024{return Err("Максимальный размер TXT — 1 МБ".into());}
-      let name=path.file_name().ok_or("Некорректное имя TXT")?.to_string_lossy();
-      txt_document(&name,&fs::read(path).map_err(error)?)
-     })();
-     match result {
-      Ok(file)=>{let _=window.emit("native-file-drag",serde_json::json!({"type":"drop","file":file}));},
-      Err(e)=>{let _=window.emit("native-error",e);}
-     }
-    },
     tauri::WindowEvent::CloseRequested{api,..}=>{api.prevent_close();let _=window.emit("app-action","hide");},
     tauri::WindowEvent::Resized(_)|tauri::WindowEvent::ScaleFactorChanged{..}=>{
      if let Some(w)=window.app_handle().get_webview_window("main"){if let Err(e)=apply_window_shape(&w){let _=window.emit("native-error",e);}}
@@ -243,6 +251,24 @@ fn main(){
 #[cfg(test)]
 mod tests {
  use super::*;
+ #[test]
+ fn webview_drag_events_open_import_and_read_the_dropped_file(){
+  let position=tauri::PhysicalPosition::new(10.0,20.0);
+  let folder=std::env::temp_dir().join(format!("checkoverlay-drop-test-{}",uuid::Uuid::new_v4()));
+  fs::create_dir(&folder).unwrap();let path=folder.join("tasks.TXT");
+  fs::write(&path,"Первая\nВторая").unwrap();
+  let enter=tauri::WebviewEvent::DragDrop(tauri::DragDropEvent::Enter{paths:vec![path.clone()],position});
+  assert_eq!(webview_drag_payload(&enter).unwrap().unwrap()["type"],"enter");
+  let drop=tauri::WebviewEvent::DragDrop(tauri::DragDropEvent::Drop{paths:vec![path.clone()],position});
+  let payload=webview_drag_payload(&drop).unwrap().unwrap();
+  assert_eq!(payload["type"],"drop");assert_eq!(payload["file"]["name"],"tasks.TXT");
+  assert_eq!(payload["file"]["text"],"Первая\nВторая");
+  let multiple=tauri::WebviewEvent::DragDrop(tauri::DragDropEvent::Drop{paths:vec![path.clone(),path.clone()],position});
+  assert!(webview_drag_payload(&multiple).is_err());
+  let leave=tauri::WebviewEvent::DragDrop(tauri::DragDropEvent::Leave);
+  assert!(webview_drag_payload(&leave).unwrap().is_none());
+  fs::remove_file(path).unwrap();fs::remove_dir(folder).unwrap();
+ }
  #[test]
  #[cfg(windows)]
  fn windows_boot_guid_is_stable_and_nonzero(){let first=boot_id().unwrap();assert_eq!(first.len(),32);assert!(first.chars().any(|c|c!='0'));assert_eq!(first,boot_id().unwrap());}
