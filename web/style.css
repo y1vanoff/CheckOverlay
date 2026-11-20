@@ -20,3 +20,12 @@ body.browser-preview{background:linear-gradient(125deg,#d8d5e4,#b4d0d4);overflow
 .import-preview-body{display:flex;flex-direction:column;flex:1;min-height:0;overflow-y:auto;padding:2px 2px 0;margin:-2px -2px 0}.import-actions{margin-top:0}
 
 html:has(body.browser-preview){overflow:auto;height:auto;min-height:100%}
+
+/* The glass ends at its single outline; the surrounding desktop is not a layer. */
+#app{border:1px solid #ffffffd9;border-radius:18px}
+#app:before{inset:0;border:0;border-radius:inherit}
+.compact-mode{border:0!important}
+/* An inset ring stays inside the scrolling list, including its rounded corners. */
+.draft-input:focus-visible{outline:none;box-shadow:inset 0 0 0 2px var(--accent)}
+#swatches{justify-content:center;padding:4px 0;flex-wrap:wrap}
+.toast{position:absolute;z-index:4;left:24px;right:24px;bottom:74px;margin:0}

@@ -107,16 +107,26 @@ fn choose_txt()->Result<Option<Value>,String>{
 fn apply_window_shape(w:&tauri::WebviewWindow)->Result<(),String>{
  #[cfg(windows)]{
   use windows_sys::Win32::Graphics::Gdi::{CreateRoundRectRgn,DeleteObject,SetWindowRgn};
+  use windows_sys::Win32::UI::WindowsAndMessaging::{GetWindowLongPtrW,SetWindowLongPtrW,SetWindowPos,GWL_STYLE,WS_CAPTION,SWP_NOMOVE,SWP_NOSIZE,SWP_NOZORDER,SWP_NOACTIVATE,SWP_FRAMECHANGED};
+  let hwnd=w.hwnd().map_err(error)?.0 as _;
+  // Resizable borderless Tao windows can regain WS_CAPTION after Windows events.
+  // Keep the resize border, but remove the native title bar before repainting.
+  let style=unsafe{GetWindowLongPtrW(hwnd,GWL_STYLE)};
+  if style & WS_CAPTION as isize != 0 {
+   unsafe {
+    SetWindowLongPtrW(hwnd,GWL_STYLE,style & !(WS_CAPTION as isize));
+    SetWindowPos(hwnd,std::ptr::null_mut(),0,0,0,0,SWP_NOMOVE|SWP_NOSIZE|SWP_NOZORDER|SWP_NOACTIVATE|SWP_FRAMECHANGED);
+   }
+  }
   let state=w.state::<WindowShape>();
   let compact=state.compact.load(Ordering::Relaxed);
   let size=w.outer_size().map_err(error)?;
   if size.width==0||size.height==0{return Ok(());}
-  let diameter=(48.0*w.scale_factor().map_err(error)?).round() as i32;
+  let diameter=(36.0*w.scale_factor().map_err(error)?).round() as i32;
   let key=(size.width,size.height,diameter,compact);
   // Changing a region can send window-position messages synchronously.
   let Ok(mut last)=state.last.try_lock() else{return Ok(())};
   if *last==Some(key){return Ok(());}
-  let hwnd=w.hwnd().map_err(error)?.0 as _;
   let region=if compact{std::ptr::null_mut()}else{
    let region=unsafe{CreateRoundRectRgn(0,0,size.width as i32+1,size.height as i32+1,diameter,diameter)};
    if region.is_null(){return Err(std::io::Error::last_os_error().to_string());}region
@@ -190,6 +200,22 @@ fn main(){
   .invoke_handler(tauri::generate_handler![load_state,save_state,archive_corrupt,recover_state,autostart_enabled,set_autostart,boot_id,choose_image,read_icon,choose_txt,transition_window,set_material,set_topmost,quit_app,popup_menu])
   .on_window_event(|window,event|{
    match event {
+    tauri::WindowEvent::DragDrop(tauri::DragDropEvent::Enter{..})=>{
+     let _=window.emit("native-file-drag",serde_json::json!({"type":"enter"}));
+    },
+    tauri::WindowEvent::DragDrop(tauri::DragDropEvent::Drop{paths,..})=>{
+     let result=(||{
+      if paths.len()!=1{return Err("Перетащите один файл TXT".to_string());}
+      let path=&paths[0];
+      if fs::metadata(path).map_err(error)?.len()>1024*1024{return Err("Максимальный размер TXT — 1 МБ".into());}
+      let name=path.file_name().ok_or("Некорректное имя TXT")?.to_string_lossy();
+      txt_document(&name,&fs::read(path).map_err(error)?)
+     })();
+     match result {
+      Ok(file)=>{let _=window.emit("native-file-drag",serde_json::json!({"type":"drop","file":file}));},
+      Err(e)=>{let _=window.emit("native-error",e);}
+     }
+    },
     tauri::WindowEvent::CloseRequested{api,..}=>{api.prevent_close();let _=window.emit("app-action","hide");},
     tauri::WindowEvent::Resized(_)|tauri::WindowEvent::ScaleFactorChanged{..}=>{
      if let Some(w)=window.app_handle().get_webview_window("main"){if let Err(e)=apply_window_shape(&w){let _=window.emit("native-error",e);}}
