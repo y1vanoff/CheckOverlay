@@ -1,4 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+mod frame;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use image::{AnimationDecoder, ImageFormat};
 use serde_json::Value;
@@ -165,33 +166,18 @@ fn set_material(app:tauri::AppHandle,compact:bool)->Result<(),String>{
  apply_window_shape(&w)
 }
 #[tauri::command]
-async fn transition_window(app:tauri::AppHandle,x:i32,y:i32,width:u32,height:u32,animate:bool)->Result<(),String>{
+async fn transition_window(app:tauri::AppHandle,x:i32,y:i32,width:u32,height:u32)->Result<(),String>{
  if width==0||height==0||width>32768||height>32768{return Err("Некорректный размер окна".into());}
  let w=app.get_webview_window("main").ok_or("Окно недоступно")?;
- let from=w.outer_position().map_err(error)?;
- let inner=w.inner_size().map_err(error)?;
- let outer=w.outer_size().map_err(error)?;
+ // Frontend fades out before this atomic geometry change; never interpolate size.
  #[cfg(windows)]{
   use windows_sys::Win32::UI::WindowsAndMessaging::{SetWindowPos,SWP_NOZORDER,SWP_NOACTIVATE};
-  let hwnd=w.hwnd().map_err(error)?.0 as isize;
-  let outer_width=width+outer.width.saturating_sub(inner.width);
-  let outer_height=height+outer.height.saturating_sub(inner.height);
-  tauri::async_runtime::spawn_blocking(move||{
-   let start=std::time::Instant::now();
-   loop{
-    let p=if animate{(start.elapsed().as_secs_f64()/0.22).min(1.0)}else{1.0};
-    let k=p*p*(3.0-2.0*p);
-    let mix=|a:f64,b:f64|(a+(b-a)*k).round() as i32;
-    let ok=unsafe{SetWindowPos(hwnd as _,std::ptr::null_mut(),mix(from.x as f64,x as f64),mix(from.y as f64,y as f64),mix(outer.width as f64,outer_width as f64),mix(outer.height as f64,outer_height as f64),SWP_NOZORDER|SWP_NOACTIVATE)};
-    if ok==0{return Err(std::io::Error::last_os_error().to_string());}
-    if p>=1.0{break;}
-    std::thread::sleep(std::time::Duration::from_millis(10));
-   }
-   Ok::<(),String>(())
-  }).await.map_err(error)??;
+  let hwnd=w.hwnd().map_err(error)?.0 as _;
+  let inner=w.inner_size().map_err(error)?;let outer=w.outer_size().map_err(error)?;
+  let ok=unsafe{SetWindowPos(hwnd,std::ptr::null_mut(),x,y,(width+outer.width.saturating_sub(inner.width)) as i32,(height+outer.height.saturating_sub(inner.height)) as i32,SWP_NOZORDER|SWP_NOACTIVATE)};
+  if ok==0{return Err(std::io::Error::last_os_error().to_string());}
  }
  #[cfg(not(windows))]{
-  let _=(from,inner,outer,animate);
   w.set_size(tauri::PhysicalSize::new(width,height)).map_err(error)?;
   w.set_position(tauri::PhysicalPosition::new(x,y)).map_err(error)?;
  }
@@ -243,7 +229,9 @@ fn main(){
     .on_menu_event(|app,event|{let _=app.emit("app-action",event.id().as_ref());})
     .on_tray_icon_event(|tray,event|{if matches!(event,TrayIconEvent::Click{button:MouseButton::Left,button_state:MouseButtonState::Up,..}){let app=tray.app_handle();if let Some(w)=app.get_webview_window("main"){let _=w.show();let _=w.set_focus();}let _=app.emit("app-action","show");}}).build(app)?;
    app.manage(tray);
-   if let Some(w)=app.get_webview_window("main"){w.set_background_color(Some(tauri::window::Color(0,0,0,0)))?;apply_window_shape(&w).map_err(std::io::Error::other)?;}
+   if let Some(w)=app.get_webview_window("main"){
+    #[cfg(windows)]frame::install(w.hwnd()?.0 as _).map_err(std::io::Error::other)?;
+    w.set_background_color(Some(tauri::window::Color(0,0,0,0)))?;apply_window_shape(&w).map_err(std::io::Error::other)?;}
    Ok(())
   }).run(tauri::generate_context!()).expect("Не удалось запустить CheckOverlay");
 }

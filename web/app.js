@@ -12,6 +12,7 @@ const invoke = (name, args) => tauri.core.invoke(name, args);
 const win = native ? tauri.window.getCurrentWindow() : null;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let state = fresh(), boot = null, ready = false, view = 'full', geometryBusy = false;
+let geometryDone = Promise.resolve();
 let pendingDelete = null, importDraft = null, importEditing = null;
 let operationBusy = false, operationPromise = null, retryOperation = null;
 let draftTimer, undoTimer, hideToastTimer, undoRecord = null, notificationGeneration = 0;
@@ -328,6 +329,7 @@ function revealDropView() {
   if(operationBusy)return Promise.resolve(false);
   if(dropViewPromise)return dropViewPromise;
   dropViewPromise=(async()=>{
+    await geometryDone;
     if(view!=='importView'||state.settings.mode==='compact')await openImports();
     return view==='importView'&&state.settings.mode==='full';
   })().finally(()=>{dropViewPromise=null;});
@@ -417,6 +419,11 @@ async function runImport(produce) {
   })();
   return operationPromise;
 }
+async function fadeWindow(from,to) {
+ const app=$('app');
+ const animation=app.animate([{opacity:from},{opacity:to}],{duration:120,easing:'ease-in-out',fill:'forwards'});
+ try{await animation.finished;app.style.opacity=String(to);}finally{animation.cancel();}
+}
 async function setMode(mode) {
   if(geometryBusy||operationBusy)return;
   saveActiveEditor?.();
@@ -425,8 +432,11 @@ async function setMode(mode) {
   if(native&&ready)await rememberGeometry();
   const from=state.settings.mode,animate=ready&&from!==mode&&!reducedMotion.matches;
   geometryBusy=true;
+  let finishGeometry;
+  geometryDone=new Promise(resolve=>{finishGeometry=resolve;});
   const app=$('app');
   try {
+    if(animate){app.classList.add('fading');await fadeWindow(1,0);}
     if(native){
       const p=await win.outerPosition(),size=await win.innerSize();
       const old=state.settings.geometry[mode];
@@ -448,8 +458,7 @@ async function setMode(mode) {
         }
         await win.setMinSize(null);await win.setMaxSize(null);
         await invoke('set_material',{compact:mode==='compact'});
-        if(animate){app.classList.add('morphing');app.style.width=innerWidth+'px';app.style.height=innerHeight+'px';}
-        await invoke('transition_window',{x:target.x,y:target.y,width:target.width,height:target.height,animate});
+        await invoke('transition_window',{x:target.x,y:target.y,width:target.width,height:target.height});
         await invoke('set_material',{compact:mode==='compact'});
         if(mode==='full'){await win.setMinSize(new tauri.dpi.LogicalSize(Math.min(320,target.width/scale),Math.min(320,target.height/scale)));await win.setMaxSize(new tauri.dpi.LogicalSize(area.size.width/scale,area.size.height/scale));}
         else {await win.setMinSize(new tauri.dpi.LogicalSize(100,100));await win.setMaxSize(new tauri.dpi.LogicalSize(100,100));}
@@ -461,14 +470,16 @@ async function setMode(mode) {
     $('compact').hidden=!compact;$('header').hidden=compact;$('full').hidden=compact;
     $('settings').hidden=true;$('importView').hidden=true;$('importButton').setAttribute('aria-expanded','false');
     if(compact){$('message').hidden=true;hideToast(true);}
-    await updateIcon();if(ready)await persist();
+    await updateIcon();
+    if(animate){
+      // Let WebView lay out and present the new geometry while fully transparent.
+      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+      await fadeWindow(0,1);
+    }
+    if(ready)await persist();
   }catch(error){message(error);}
-  finally{geometryBusy=false;app.classList.remove('morphing');app.style.removeProperty('width');app.style.removeProperty('height');app.style.removeProperty('transform');}
+  finally{geometryBusy=false;app.classList.remove('fading');app.style.removeProperty('opacity');finishGeometry();}
 }
-new ResizeObserver(()=>{
-  if(!$('app').classList.contains('morphing'))return;
-  const app=$('app');app.style.transform='scale('+innerWidth/parseFloat(app.style.width)+','+innerHeight/parseFloat(app.style.height)+')';
-}).observe(document.documentElement);
 async function settings() {
   if(operationBusy||geometryBusy)return;
   if(state.settings.mode==='compact')await setMode('full');

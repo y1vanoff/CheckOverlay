@@ -17,7 +17,12 @@ async function nativeGeometry(page,{mode='full',otherMonitor=false}={}){
   const second={scaleFactor:1,workArea:{position:{x:-1920,y:0},size:{width:1920,height:1080}}};
   window.__TAURI__={core:{invoke:async(name,args)=>{
    window.calls.push({name,args});if(name==='load_state')return seed;if(name==='boot_id')return 'boot-test';
-   if(name==='transition_window'){position={x:args.x,y:args.y};size={width:args.width,height:args.height};}
+   if(name==='transition_window'){
+    const app=document.getElementById('app'),style=getComputedStyle(app);
+    window.transitionFrames??=[];window.transitionFrames.push({opacity:style.opacity,transform:style.transform});
+    if(window.failTransition)throw Error('geometry unavailable');
+    position={x:args.x,y:args.y};size={width:args.width,height:args.height};
+   }
    if(name==='choose_txt')return {name:'demo.txt',text:'Одна\n'+'я'.repeat(81)};
   }},window:{getCurrentWindow:()=>w,availableMonitors:async()=>otherMonitor?[second,m]:[m],primaryMonitor:async()=>m},dpi:{LogicalSize:Size,PhysicalPosition:Pos},event:{listen:async(name,fn)=>{window.nativeEvents??={};window.nativeEvents[name]=fn;return ()=>{};}}};
  },{seed,otherMonitor});
@@ -27,7 +32,7 @@ async function nativeGeometry(page,{mode='full',otherMonitor=false}={}){
 test('collapse anchors to the current top-right at 150% and restores full geometry',async({page})=>{
  await nativeGeometry(page);await page.getByRole('button',{name:'Свернуть в иконку',exact:true}).click();await expect(page.locator('#compact')).toBeVisible();
  let target=await page.evaluate(()=>window.calls.filter(x=>x.name==='transition_window').at(-1).args);
- expect(target).toEqual({x:430,y:100,width:150,height:150,animate:true});
+ expect(target).toEqual({x:430,y:100,width:150,height:150});
  await page.getByRole('button',{name:'Открыть чеклист'}).click();await expect(page.locator('#full')).toBeVisible();
  target=await page.evaluate(()=>window.calls.filter(x=>x.name==='transition_window').at(-1).args);
  expect(target).toMatchObject({x:100,y:100,width:480,height:705});
@@ -37,9 +42,32 @@ test('collapse anchors to the current top-right at 150% and restores full geomet
  expect(await page.evaluate(()=>window.calls.filter(x=>x.name==='startDragging').length)).toBe(1);
 });
 
-test('system reduced-motion preference disables the native window animation',async({page})=>{
+test('system reduced-motion preference disables fade animation',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await nativeGeometry(page);await page.getByRole('button',{name:'Свернуть в иконку',exact:true}).click();await expect(page.locator('#compact')).toBeVisible();
- expect(await page.evaluate(()=>window.calls.filter(x=>x.name==='transition_window').at(-1).args.animate)).toBe(false);
+ expect(await page.locator('#app').evaluate(e=>e.getAnimations().length)).toBe(0);
+ expect(await page.evaluate(()=>window.transitionFrames.at(-1))).toEqual({opacity:'1',transform:'none'});
+});
+
+test('both mode changes resize only after fade-out and recover visibility on failure',async({page})=>{
+ await nativeGeometry(page);
+ await page.locator('#collapse').click();await expect(page.locator('#app')).not.toHaveClass(/fading/);
+ await page.locator('#compact').click();await expect(page.locator('#app')).not.toHaveClass(/fading/);
+ expect(await page.evaluate(()=>window.transitionFrames.slice(-2))).toEqual([{opacity:'0',transform:'none'},{opacity:'0',transform:'none'}]);
+ await expect(page.locator('#app')).toHaveCSS('opacity','1');
+ await page.evaluate(()=>{window.failTransition=true;});
+ await page.locator('#collapse').click();await expect(page.locator('#message')).toContainText('geometry unavailable');
+ await expect(page.locator('#app')).not.toHaveClass(/fading/);
+ await expect(page.locator('#app')).toHaveCSS('opacity','1');
+ await expect(page.locator('#full')).toBeVisible();
+});
+
+test('transparency changes background alpha while content stays opaque',async({page})=>{
+ await nativeGeometry(page);await page.locator('#settingsButton').click();
+ await page.getByRole('button',{name:'Вид',exact:true}).click();
+ await page.locator('#transparency').fill('60');
+ await expect(page.locator('#app')).toHaveCSS('opacity','1');
+ const style=await page.locator('#app').evaluate(e=>({background:getComputedStyle(e).backgroundImage,heading:getComputedStyle(e.querySelector('#settings h1')).opacity,surface:getComputedStyle(document.documentElement).getPropertyValue('--surface')}));
+ expect(style.surface).toBe('0.4');expect(style.background).toContain('0.4');expect(style.heading).toBe('1');
 });
 
 test('import actions remain inside a small native viewport',async({page})=>{
@@ -51,7 +79,7 @@ test('import actions remain inside a small native viewport',async({page})=>{
 test('startup compact position uses the saved monitor and that monitor scale',async({page})=>{
  await nativeGeometry(page,{mode:'compact',otherMonitor:true});await expect(page.locator('#compact')).toBeVisible();
  const target=await page.evaluate(()=>window.calls.find(x=>x.name==='transition_window').args);
- expect(target).toEqual({x:-300,y:100,width:100,height:100,animate:false});
+ expect(target).toEqual({x:-300,y:100,width:100,height:100});
 });
 
 test('moving compact then expanding uses its current anchor even before the geometry debounce',async({page})=>{
