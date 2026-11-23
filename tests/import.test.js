@@ -7,8 +7,8 @@ test('version 1 migration keeps tasks, draft and settings without changing sourc
  const old=fresh();old.version=1;delete old.imports;
  old.tasks=[{id:'old',text:'Существующая',done:false,order:0,completedAt:null,boot:null}];old.draft={id:'old',text:'Черновик'};old.settings.color='#AABBCC';
  const migrated=validateDocument(old);
- assert.equal(migrated.version,2);assert.deepEqual(migrated.imports,[]);assert.deepEqual(migrated.tasks,old.tasks);assert.deepEqual(migrated.draft,old.draft);assert.equal(migrated.settings.color,'#AABBCC');assert.equal(old.version,1);
- assert.throws(()=>validateDocument({...old,version:3}));
+ assert.equal(migrated.version,3);assert.deepEqual(migrated.imports,[]);assert.deepEqual(migrated.tasks,old.tasks.map(t=>({...t,list:"today"})));assert.deepEqual(migrated.draft,{...old.draft,list:"today"});assert.equal(migrated.settings.color,'#AABBCC');assert.equal(old.version,1);
+ assert.throws(()=>validateDocument({...old,version:4}));
 });
 test('TXT: BOM, CRLF/LF/CR, blank lines, literal markdown and grapheme limits',()=>{
  const r=parseTxt('\uFEFF Первое \r\n\r\n- [x] обычный текст\n'+'👨‍👩‍👧‍👦'.repeat(80)+'\r'+'я'.repeat(81));

@@ -36,9 +36,21 @@ fn replace(from:&Path,to:&Path)->Result<(),String>{fs::rename(from,to).map_err(e
 #[tauri::command]
 fn save_state(app:tauri::AppHandle,value:Value,lock:tauri::State<DiskLock>)->Result<(),String>{
  let _guard=lock.0.lock().map_err(error)?;
- if !matches!(value["version"].as_u64(),Some(1|2))||!value["tasks"].is_array()||(value["version"]==2&&!value["imports"].is_array()){return Err("Некорректные данные".into());}
+ if !matches!(value["version"].as_u64(),Some(1|2|3))||!value["tasks"].is_array()||(value["version"].as_u64().unwrap_or(0)>=2&&!value["imports"].is_array()){return Err("Некорректные данные".into());}
  let bytes=serde_json::to_vec(&value).map_err(error)?;if bytes.len()>2_000_000{return Err("Файл данных слишком большой".into());}
- let target=data_file(&app)?;let temp=target.with_extension("tmp");{let mut file=File::create(&temp).map_err(error)?;file.write_all(&bytes).map_err(error)?;file.sync_all().map_err(error)?;}replace(&temp,&target)?;
+ let target=data_file(&app)?;
+ if value["version"]==3 && target.exists(){
+  let old=fs::read(&target).map_err(error)?;
+  if serde_json::from_slice::<Value>(&old).ok().and_then(|v|v["version"].as_u64()).is_some_and(|v|v<3){
+   let backup=target.with_file_name("state-before-v3.json");
+   match fs::OpenOptions::new().write(true).create_new(true).open(backup){
+    Ok(mut f)=>{f.write_all(&old).map_err(error)?;f.sync_all().map_err(error)?;},
+    Err(e) if e.kind()==std::io::ErrorKind::AlreadyExists=>{},
+    Err(e)=>return Err(error(e))
+   }
+  }
+ }
+ let temp=target.with_extension("tmp");{let mut file=File::create(&temp).map_err(error)?;file.write_all(&bytes).map_err(error)?;file.sync_all().map_err(error)?;}replace(&temp,&target)?;
  Ok(())
 }
 #[tauri::command]
@@ -193,13 +205,24 @@ fn set_topmost(app:tauri::AppHandle,enabled:bool)->Result<(),String>{
 fn quit_app(app:tauri::AppHandle){app.exit(0);}
 #[tauri::command]
 fn popup_menu(app:tauri::AppHandle)->Result<(),String>{let window=app.get_webview_window("main").ok_or("Окно недоступно")?;let menu=app.menu().ok_or("Меню недоступно")?;window.popup_menu(&menu).map_err(error)}
+#[tauri::command]
+fn open_url(url:String)->Result<(),String>{
+ let parsed=tauri::Url::parse(&url).map_err(error)?;
+ if !matches!(parsed.scheme(),"http"|"https")||parsed.host_str().is_none()||!parsed.username().is_empty()||parsed.password().is_some(){return Err("Недопустимая ссылка".into());}
+ #[cfg(windows)]{
+ use std::os::windows::process::CommandExt;
+ std::process::Command::new("rundll32.exe").args(["url.dll,FileProtocolHandler",parsed.as_str()]).creation_flags(0x08000000).spawn().map_err(error)?;
+ Ok(())
+ }
+ #[cfg(not(windows))]{Err("Поддерживается только Windows".into())}
+}
 fn main(){
  tauri::Builder::default()
   .plugin(tauri_plugin_single_instance::init(|app,_,_|{if let Some(w)=app.get_webview_window("main"){let _=w.show();let _=w.set_focus();let _=app.emit("app-action","show");}}))
   .plugin(tauri_plugin_autostart::init(tauri_plugin_autostart::MacosLauncher::LaunchAgent,None))
   .manage(DiskLock(Mutex::new(())))
   .manage(WindowShape::default())
-  .invoke_handler(tauri::generate_handler![load_state,save_state,archive_corrupt,recover_state,autostart_enabled,set_autostart,boot_id,choose_image,read_icon,choose_txt,transition_window,set_material,set_topmost,quit_app,popup_menu])
+  .invoke_handler(tauri::generate_handler![load_state,save_state,open_url,archive_corrupt,recover_state,autostart_enabled,set_autostart,boot_id,choose_image,read_icon,choose_txt,transition_window,set_material,set_topmost,quit_app,popup_menu])
   // WebView2 delivers Explorer drag/drop to the webview, not the outer window.
   .on_webview_event(|webview,event|{
    match webview_drag_payload(event) {
@@ -210,6 +233,7 @@ fn main(){
   })
   .on_window_event(|window,event|{
    match event {
+    tauri::WindowEvent::Focused(focused)=>{let _=window.emit("window-focus",*focused);},
     tauri::WindowEvent::CloseRequested{api,..}=>{api.prevent_close();let _=window.emit("app-action","hide");},
     tauri::WindowEvent::Resized(_)|tauri::WindowEvent::ScaleFactorChanged{..}=>{
      if let Some(w)=window.app_handle().get_webview_window("main"){if let Err(e)=apply_window_shape(&w){let _=window.emit("native-error",e);}}

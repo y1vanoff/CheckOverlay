@@ -1,0 +1,4335 @@
+{
+  "result": [
+    {
+      "id": "6ed6c96e-1f74-80b3-8008-fd1dae806807",
+      "name": "01 · Главная / На сегодня",
+      "width": 320,
+      "height": 470,
+      "children": [
+        {
+          "name": "Стеклянная панель",
+          "type": "rectangle",
+          "x": 8,
+          "y": 8,
+          "width": 304,
+          "height": 454,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.48,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#ffffff",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": 0.85,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 18
+        },
+        {
+          "name": "Значок приложения",
+          "type": "group",
+          "x": 22,
+          "y": 20,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Приложение",
+          "type": "text",
+          "x": 111,
+          "y": 19,
+          "width": 77,
+          "height": 15,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "CheckOverlay",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Свернуть",
+          "type": "text",
+          "x": 260,
+          "y": 17,
+          "width": 22,
+          "height": 23,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "↙",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "17",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Скрыть в трей",
+          "type": "text",
+          "x": 286,
+          "y": 17,
+          "width": 18,
+          "height": 25,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "×",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "18",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Заголовок",
+          "type": "text",
+          "x": 24,
+          "y": 99,
+          "width": 272.00000000000006,
+          "height": 33,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Дела на сегодня",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "24",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Счётчик",
+          "type": "text",
+          "x": 24,
+          "y": 154,
+          "width": 271.9999999999998,
+          "height": 13,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "1 из 5",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "9",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Чекбокс задачи 0",
+          "type": "rectangle",
+          "x": 24,
+          "y": 175,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 0",
+          "type": "text",
+          "x": 50,
+          "y": 175,
+          "width": 246,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Принести диск с файлами",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 0",
+          "type": "rectangle",
+          "x": 50,
+          "y": 208,
+          "width": 242,
+          "height": 1,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Чекбокс задачи 1",
+          "type": "rectangle",
+          "x": 24,
+          "y": 223,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 1",
+          "type": "text",
+          "x": 50,
+          "y": 223,
+          "width": 246,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Отправить 4 письма в Пушкинское",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 1",
+          "type": "rectangle",
+          "x": 50,
+          "y": 256,
+          "width": 242,
+          "height": 1,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Чекбокс задачи 2",
+          "type": "rectangle",
+          "x": 24,
+          "y": 271,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 2",
+          "type": "text",
+          "x": 50,
+          "y": 271,
+          "width": 246,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Подготовить документы для РЖА",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 2",
+          "type": "rectangle",
+          "x": 50,
+          "y": 304,
+          "width": 242,
+          "height": 1,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Чекбокс задачи 3",
+          "type": "rectangle",
+          "x": 24,
+          "y": 319,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 3",
+          "type": "text",
+          "x": 50,
+          "y": 319,
+          "width": 246,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Отправить КП в Василеостровское",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 3",
+          "type": "rectangle",
+          "x": 50,
+          "y": 352,
+          "width": 242,
+          "height": 1,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Мини-логотип выполненной задачи",
+          "type": "group",
+          "x": 24,
+          "y": 372,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Выполненная задача",
+          "type": "text",
+          "x": 50,
+          "y": 372,
+          "width": 242,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#708792",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Настроить Алисе доступ к GPT",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Добавить задачу",
+          "type": "rectangle",
+          "x": 25,
+          "y": 412,
+          "width": 272,
+          "height": 34,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.55,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 9
+        },
+        {
+          "name": "Добавить / текст",
+          "type": "text",
+          "x": 97.5,
+          "y": 421,
+          "width": 125,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Добавить задачу",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Прогресс / фон",
+          "type": "rectangle",
+          "x": 24,
+          "y": 140,
+          "width": 272,
+          "height": 4,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.6,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 2
+        },
+        {
+          "name": "Прогресс / 1 из 5",
+          "type": "rectangle",
+          "x": 24,
+          "y": 140,
+          "width": 54.400000000000006,
+          "height": 4,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#527f89",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 2
+        },
+        {
+          "name": "Импорт / иконка · эталон 18",
+          "type": "group",
+          "x": 44,
+          "y": 20,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Вкладки списков / фон",
+          "type": "rectangle",
+          "x": 24,
+          "y": 56,
+          "width": 272,
+          "height": 30,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#dee9ef",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 10
+        },
+        {
+          "name": "Вкладки / выбранная",
+          "type": "rectangle",
+          "x": 27,
+          "y": 59,
+          "width": 131,
+          "height": 24,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 8
+        },
+        {
+          "name": "Вкладка На сегодня",
+          "type": "text",
+          "x": 59.5,
+          "y": 64,
+          "width": 66,
+          "height": 14,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "На сегодня",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.2"
+          }
+        },
+        {
+          "name": "Вкладка Большие",
+          "type": "text",
+          "x": 201,
+          "y": 64,
+          "width": 53,
+          "height": 14,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Большие",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6ed6c96e-1f74-80b3-8008-fd1dafcb6ef0",
+      "name": "02 · Главная / Большие",
+      "width": 320,
+      "height": 470,
+      "children": [
+        {
+          "name": "Стеклянная панель",
+          "type": "rectangle",
+          "x": 8,
+          "y": 8,
+          "width": 304,
+          "height": 454,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.48,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#ffffff",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": 0.85,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 18
+        },
+        {
+          "name": "Значок приложения",
+          "type": "group",
+          "x": 22,
+          "y": 20,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Приложение",
+          "type": "text",
+          "x": 111,
+          "y": 19,
+          "width": 77,
+          "height": 15,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "CheckOverlay",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Свернуть",
+          "type": "text",
+          "x": 260,
+          "y": 17,
+          "width": 22,
+          "height": 23,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "↙",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "17",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Скрыть в трей",
+          "type": "text",
+          "x": 286,
+          "y": 17,
+          "width": 18,
+          "height": 25,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "×",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "18",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Заголовок",
+          "type": "text",
+          "x": 24,
+          "y": 99,
+          "width": 272,
+          "height": 33,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Большие дела",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "24",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Счётчик",
+          "type": "text",
+          "x": 24,
+          "y": 154,
+          "width": 271.9999999999998,
+          "height": 13,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "1 из 3",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "9",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Чекбокс задачи 0",
+          "type": "rectangle",
+          "x": 24,
+          "y": 175,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 0",
+          "type": "text",
+          "x": 50,
+          "y": 175,
+          "width": 246,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Запустить семейный портал",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 0",
+          "type": "rectangle",
+          "x": 50,
+          "y": 208,
+          "width": 242,
+          "height": 1,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Чекбокс задачи 1",
+          "type": "rectangle",
+          "x": 24,
+          "y": 223,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 1",
+          "type": "text",
+          "x": 50,
+          "y": 223,
+          "width": 246,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Собрать семейный архив",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 1",
+          "type": "rectangle",
+          "x": 50,
+          "y": 256,
+          "width": 242,
+          "height": 1,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Чекбокс задачи 2",
+          "type": "rectangle",
+          "x": 24,
+          "y": 271,
+          "width": 16,
+          "height": 16,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 2",
+          "type": "text",
+          "x": 50,
+          "y": 271,
+          "width": 246,
+          "height": 17,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Отправить письма заказчику",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 2",
+          "type": "rectangle",
+          "x": 50,
+          "y": 304,
+          "width": 242,
+          "height": 1,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Чекбокс задачи 3",
+          "type": "rectangle",
+          "x": 24,
+          "y": 319,
+          "width": 16,
+          "height": 16,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 3",
+          "type": "text",
+          "x": 50,
+          "y": 319,
+          "width": 246,
+          "height": 17,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Подготовить документы",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 3",
+          "type": "rectangle",
+          "x": 50,
+          "y": 352,
+          "width": 242,
+          "height": 1,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Мини-логотип выполненной задачи",
+          "type": "group",
+          "x": 24,
+          "y": 275,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Выполненная задача",
+          "type": "text",
+          "x": 50,
+          "y": 275,
+          "width": 242,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#708792",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Продумать структуру портала",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Добавить задачу",
+          "type": "rectangle",
+          "x": 25,
+          "y": 412,
+          "width": 272,
+          "height": 34,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.55,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 9
+        },
+        {
+          "name": "Добавить / текст",
+          "type": "text",
+          "x": 97.5,
+          "y": 421,
+          "width": 125,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Добавить задачу",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Прогресс / фон",
+          "type": "rectangle",
+          "x": 24,
+          "y": 140,
+          "width": 272,
+          "height": 4,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.6,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 2
+        },
+        {
+          "name": "Прогресс / 1 из 5",
+          "type": "rectangle",
+          "x": 24,
+          "y": 140,
+          "width": 90.66666666666663,
+          "height": 4,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#527f89",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 2
+        },
+        {
+          "name": "Импорт / иконка · эталон 18",
+          "type": "group",
+          "x": 44,
+          "y": 20,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Вкладки списков / фон",
+          "type": "rectangle",
+          "x": 24,
+          "y": 56,
+          "width": 272,
+          "height": 30,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#dee9ef",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 10
+        },
+        {
+          "name": "Вкладки / выбранная",
+          "type": "rectangle",
+          "x": 162,
+          "y": 59,
+          "width": 131,
+          "height": 24,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 8
+        },
+        {
+          "name": "Вкладка На сегодня",
+          "type": "text",
+          "x": 59.5,
+          "y": 64,
+          "width": 66,
+          "height": 14,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "На сегодня",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.2"
+          }
+        },
+        {
+          "name": "Вкладка Большие",
+          "type": "text",
+          "x": 201,
+          "y": 64,
+          "width": 53,
+          "height": 14,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Большие",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.2"
+          }
+        },
+        {
+          "name": "Правило хранения",
+          "type": "text",
+          "x": 24,
+          "y": 373,
+          "width": 272,
+          "height": 12,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Хранятся до ручного удаления",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "10",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6ed6c96e-1f74-80b3-8008-fd1f194432df",
+      "name": "04 · Перенос / Стрелка",
+      "width": 320,
+      "height": 470,
+      "children": [
+        {
+          "name": "Стеклянная панель",
+          "type": "rectangle",
+          "x": 8,
+          "y": 8,
+          "width": 304,
+          "height": 454,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.48,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#ffffff",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": 0.85,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 18
+        },
+        {
+          "name": "Значок приложения",
+          "type": "group",
+          "x": 22,
+          "y": 20,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Приложение",
+          "type": "text",
+          "x": 111,
+          "y": 19,
+          "width": 77,
+          "height": 15,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "CheckOverlay",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Свернуть",
+          "type": "text",
+          "x": 260,
+          "y": 17,
+          "width": 22,
+          "height": 23,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "↙",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "17",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Скрыть в трей",
+          "type": "text",
+          "x": 286,
+          "y": 17,
+          "width": 18,
+          "height": 25,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "×",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "18",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Заголовок",
+          "type": "text",
+          "x": 24,
+          "y": 99,
+          "width": 272,
+          "height": 33,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Большие дела",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "24",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Счётчик",
+          "type": "text",
+          "x": 24,
+          "y": 154,
+          "width": 271.9999999999998,
+          "height": 13,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "1 из 3",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "9",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Чекбокс задачи 0",
+          "type": "rectangle",
+          "x": 24,
+          "y": 175,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 0",
+          "type": "text",
+          "x": 50,
+          "y": 175,
+          "width": 208,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Запустить семейный портал",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 0",
+          "type": "rectangle",
+          "x": 50,
+          "y": 208,
+          "width": 242,
+          "height": 1,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Чекбокс задачи 1",
+          "type": "rectangle",
+          "x": 24,
+          "y": 223,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 1",
+          "type": "text",
+          "x": 50,
+          "y": 223,
+          "width": 208,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Собрать семейный архив",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 1",
+          "type": "rectangle",
+          "x": 50,
+          "y": 256,
+          "width": 242,
+          "height": 1,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Чекбокс задачи 2",
+          "type": "rectangle",
+          "x": 24,
+          "y": 271,
+          "width": 16,
+          "height": 16,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 2",
+          "type": "text",
+          "x": 50,
+          "y": 271,
+          "width": 246,
+          "height": 17,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Отправить письма заказчику",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 2",
+          "type": "rectangle",
+          "x": 50,
+          "y": 304,
+          "width": 242,
+          "height": 1,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Чекбокс задачи 3",
+          "type": "rectangle",
+          "x": 24,
+          "y": 319,
+          "width": 16,
+          "height": 16,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 3",
+          "type": "text",
+          "x": 50,
+          "y": 319,
+          "width": 246,
+          "height": 17,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Подготовить документы",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 3",
+          "type": "rectangle",
+          "x": 50,
+          "y": 352,
+          "width": 242,
+          "height": 1,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Мини-логотип выполненной задачи",
+          "type": "group",
+          "x": 24,
+          "y": 275,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Выполненная задача",
+          "type": "text",
+          "x": 50,
+          "y": 275,
+          "width": 208,
+          "height": 33,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#708792",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Продумать структуру портала",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Добавить задачу",
+          "type": "rectangle",
+          "x": 25,
+          "y": 412,
+          "width": 272,
+          "height": 34,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.55,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 9
+        },
+        {
+          "name": "Добавить / текст",
+          "type": "text",
+          "x": 97.5,
+          "y": 421,
+          "width": 125,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Добавить задачу",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Прогресс / фон",
+          "type": "rectangle",
+          "x": 24,
+          "y": 140,
+          "width": 272,
+          "height": 4,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.6,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 2
+        },
+        {
+          "name": "Прогресс / 1 из 5",
+          "type": "rectangle",
+          "x": 24,
+          "y": 140,
+          "width": 90.66666666666663,
+          "height": 4,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#527f89",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 2
+        },
+        {
+          "name": "Импорт / иконка · эталон 18",
+          "type": "group",
+          "x": 44,
+          "y": 20,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Вкладки списков / фон",
+          "type": "rectangle",
+          "x": 24,
+          "y": 56,
+          "width": 272,
+          "height": 30,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#dee9ef",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 10
+        },
+        {
+          "name": "Вкладки / выбранная",
+          "type": "rectangle",
+          "x": 162,
+          "y": 59,
+          "width": 131,
+          "height": 24,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 8
+        },
+        {
+          "name": "Вкладка На сегодня",
+          "type": "text",
+          "x": 59.5,
+          "y": 64,
+          "width": 66,
+          "height": 14,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "На сегодня",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.2"
+          }
+        },
+        {
+          "name": "Вкладка Большие",
+          "type": "text",
+          "x": 201,
+          "y": 64,
+          "width": 53,
+          "height": 14,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Большие",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.2"
+          }
+        },
+        {
+          "name": "Правило хранения",
+          "type": "text",
+          "x": 24,
+          "y": 373,
+          "width": 272,
+          "height": 12,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Хранятся до ручного удаления",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "10",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.2"
+          }
+        },
+        {
+          "name": "Перенести в На сегодня / фон / Текст задачи 0",
+          "type": "rectangle",
+          "x": 270,
+          "y": 171,
+          "width": 26,
+          "height": 26,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 8
+        },
+        {
+          "name": "Перенести в На сегодня / иконка / Текст задачи 0",
+          "type": "group",
+          "x": 273,
+          "y": 174,
+          "width": 20,
+          "height": 20,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Перенести в На сегодня / фон / Текст задачи 1",
+          "type": "rectangle",
+          "x": 270,
+          "y": 219,
+          "width": 26,
+          "height": 26,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 8
+        },
+        {
+          "name": "Перенести в На сегодня / иконка / Текст задачи 1",
+          "type": "group",
+          "x": 273,
+          "y": 222,
+          "width": 20,
+          "height": 20,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Перенести в На сегодня / фон / Выполненная задача",
+          "type": "rectangle",
+          "x": 270,
+          "y": 271,
+          "width": 26,
+          "height": 26,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 8
+        },
+        {
+          "name": "Перенести в На сегодня / иконка / Выполненная задача",
+          "type": "group",
+          "x": 273,
+          "y": 274,
+          "width": 20,
+          "height": 20,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        }
+      ]
+    },
+    {
+      "id": "6ed6c96e-1f74-80b3-8008-fd1fc7d4da07",
+      "name": "07 · Большие / Задача перенесена на сегодня",
+      "width": 320,
+      "height": 470,
+      "children": [
+        {
+          "name": "Стеклянная панель",
+          "type": "rectangle",
+          "x": 8,
+          "y": 8,
+          "width": 304,
+          "height": 454,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.48,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#ffffff",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": 0.85,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 18
+        },
+        {
+          "name": "Значок приложения",
+          "type": "group",
+          "x": 22,
+          "y": 20,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Приложение",
+          "type": "text",
+          "x": 111,
+          "y": 19,
+          "width": 77,
+          "height": 15,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "CheckOverlay",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Свернуть",
+          "type": "text",
+          "x": 260,
+          "y": 17,
+          "width": 22,
+          "height": 23,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "↙",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "17",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Скрыть в трей",
+          "type": "text",
+          "x": 286,
+          "y": 17,
+          "width": 18,
+          "height": 25,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "×",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "18",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Заголовок",
+          "type": "text",
+          "x": 24,
+          "y": 99,
+          "width": 272,
+          "height": 33,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Большие дела",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "24",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Счётчик",
+          "type": "text",
+          "x": 24,
+          "y": 154,
+          "width": 271.9999999999998,
+          "height": 13,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "1 из 2",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "9",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Чекбокс задачи 0",
+          "type": "rectangle",
+          "x": 24,
+          "y": 175,
+          "width": 16,
+          "height": 16,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 0",
+          "type": "text",
+          "x": 50,
+          "y": 175,
+          "width": 208,
+          "height": 17,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Запустить семейный портал",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 0",
+          "type": "rectangle",
+          "x": 50,
+          "y": 208,
+          "width": 242,
+          "height": 1,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Чекбокс задачи 1",
+          "type": "rectangle",
+          "x": 24,
+          "y": 175,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 1",
+          "type": "text",
+          "x": 50,
+          "y": 175,
+          "width": 208,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Собрать семейный архив",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 1",
+          "type": "rectangle",
+          "x": 50,
+          "y": 208,
+          "width": 242,
+          "height": 1,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Чекбокс задачи 2",
+          "type": "rectangle",
+          "x": 24,
+          "y": 271,
+          "width": 16,
+          "height": 16,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 2",
+          "type": "text",
+          "x": 50,
+          "y": 271,
+          "width": 246,
+          "height": 17,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Отправить письма заказчику",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 2",
+          "type": "rectangle",
+          "x": 50,
+          "y": 304,
+          "width": 242,
+          "height": 1,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Чекбокс задачи 3",
+          "type": "rectangle",
+          "x": 24,
+          "y": 319,
+          "width": 16,
+          "height": 16,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.5,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#8fa8b5",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": null,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 5
+        },
+        {
+          "name": "Текст задачи 3",
+          "type": "text",
+          "x": 50,
+          "y": 319,
+          "width": 246,
+          "height": 17,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Подготовить документы",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Разделитель 3",
+          "type": "rectangle",
+          "x": 50,
+          "y": 352,
+          "width": 242,
+          "height": 1,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.4,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 0
+        },
+        {
+          "name": "Мини-логотип выполненной задачи",
+          "type": "group",
+          "x": 24,
+          "y": 227,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Выполненная задача",
+          "type": "text",
+          "x": 50,
+          "y": 227,
+          "width": 208,
+          "height": 33,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#708792",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Продумать структуру портала",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Добавить задачу",
+          "type": "rectangle",
+          "x": 25,
+          "y": 412,
+          "width": 272,
+          "height": 34,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.55,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 9
+        },
+        {
+          "name": "Добавить / текст",
+          "type": "text",
+          "x": 97.5,
+          "y": 421,
+          "width": 125,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Добавить задачу",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Прогресс / фон",
+          "type": "rectangle",
+          "x": 24,
+          "y": 140,
+          "width": 272,
+          "height": 4,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.6,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 2
+        },
+        {
+          "name": "Прогресс / 1 из 5",
+          "type": "rectangle",
+          "x": 24,
+          "y": 140,
+          "width": 136,
+          "height": 4,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#527f89",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 2
+        },
+        {
+          "name": "Импорт / иконка · эталон 18",
+          "type": "group",
+          "x": 44,
+          "y": 20,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Вкладки списков / фон",
+          "type": "rectangle",
+          "x": 24,
+          "y": 56,
+          "width": 272,
+          "height": 30,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#dee9ef",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 10
+        },
+        {
+          "name": "Вкладки / выбранная",
+          "type": "rectangle",
+          "x": 162,
+          "y": 59,
+          "width": 131,
+          "height": 24,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 8
+        },
+        {
+          "name": "Вкладка На сегодня",
+          "type": "text",
+          "x": 59.5,
+          "y": 64,
+          "width": 66,
+          "height": 14,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "На сегодня",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.2"
+          }
+        },
+        {
+          "name": "Вкладка Большие",
+          "type": "text",
+          "x": 201,
+          "y": 64,
+          "width": 53,
+          "height": 14,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Большие",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.2"
+          }
+        },
+        {
+          "name": "Правило хранения",
+          "type": "text",
+          "x": 24,
+          "y": 373,
+          "width": 272,
+          "height": 12,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Хранятся до ручного удаления",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "10",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.2"
+          }
+        },
+        {
+          "name": "Перенести в На сегодня / фон / Текст задачи 0",
+          "type": "rectangle",
+          "x": 270,
+          "y": 171,
+          "width": 26,
+          "height": 26,
+          "hidden": true,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 8
+        },
+        {
+          "name": "Перенести в На сегодня / иконка / Текст задачи 0",
+          "type": "group",
+          "x": 273,
+          "y": 174,
+          "width": 20,
+          "height": 20,
+          "hidden": true,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Перенести в На сегодня / фон / Текст задачи 1",
+          "type": "rectangle",
+          "x": 270,
+          "y": 171,
+          "width": 26,
+          "height": 26,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 8
+        },
+        {
+          "name": "Перенести в На сегодня / иконка / Текст задачи 1",
+          "type": "group",
+          "x": 273,
+          "y": 174,
+          "width": 20,
+          "height": 20,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Перенести в На сегодня / фон / Выполненная задача",
+          "type": "rectangle",
+          "x": 270,
+          "y": 223,
+          "width": 26,
+          "height": 26,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 8
+        },
+        {
+          "name": "Перенести в На сегодня / иконка / Выполненная задача",
+          "type": "group",
+          "x": 273,
+          "y": 226,
+          "width": 20,
+          "height": 20,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Уведомление · задача перенесена",
+          "type": "rectangle",
+          "x": 24,
+          "y": 356,
+          "width": 272,
+          "height": 44,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#eef5f6",
+              "fillOpacity": 0.96,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#ffffff",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": 0.9,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 12
+        },
+        {
+          "name": "Уведомление / текст",
+          "type": "text",
+          "x": 38,
+          "y": 361,
+          "width": 164,
+          "height": 32,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Задача перенесена\n\"на сегодня\"",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Отменить перенос",
+          "type": "rectangle",
+          "x": 210,
+          "y": 364,
+          "width": 76,
+          "height": 28,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.68,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 8
+        },
+        {
+          "name": "Отменить перенос / текст",
+          "type": "text",
+          "x": 210,
+          "y": 369.5,
+          "width": 76,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#376b77",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Отмена",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.4"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6ed6c96e-1f74-80b3-8008-fd1db151dfe7",
+      "name": "03 · Настройки / Автосворачивание",
+      "width": 320,
+      "height": 470,
+      "children": [
+        {
+          "name": "Стеклянная панель",
+          "type": "rectangle",
+          "x": 8,
+          "y": 8,
+          "width": 304,
+          "height": 454,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.48,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [
+            {
+              "strokeColor": "#ffffff",
+              "strokeColorRefFile": null,
+              "strokeColorRefId": null,
+              "strokeOpacity": 0.85,
+              "strokeStyle": null,
+              "strokeWidth": 1,
+              "strokeAlignment": null,
+              "strokeCapStart": null,
+              "strokeCapEnd": null,
+              "strokeColorGradient": null,
+              "strokeImage": null
+            }
+          ],
+          "radius": 18
+        },
+        {
+          "name": "Значок приложения",
+          "type": "group",
+          "x": 22,
+          "y": 20,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Приложение",
+          "type": "text",
+          "x": 111,
+          "y": 19,
+          "width": 77,
+          "height": 15,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "CheckOverlay",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Скрыть в трей",
+          "type": "text",
+          "x": 286,
+          "y": 17,
+          "width": 18,
+          "height": 25,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "×",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "18",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.35"
+          }
+        },
+        {
+          "name": "Заголовок",
+          "type": "text",
+          "x": 24,
+          "y": 63,
+          "width": 272,
+          "height": 31,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Настройки",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "24",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Выбранная вкладка",
+          "type": "rectangle",
+          "x": 24,
+          "y": 113,
+          "width": 88,
+          "height": 30,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 0.8,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 9
+        },
+        {
+          "name": "Вкладка Общие",
+          "type": "text",
+          "x": 24,
+          "y": 120,
+          "width": 88,
+          "height": 16,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Общие",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "600",
+            "align": "center",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Вкладка Вид",
+          "type": "text",
+          "x": 116,
+          "y": 120,
+          "width": 88,
+          "height": 16,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#6c8391",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Вид",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Вкладка Иконка",
+          "type": "text",
+          "x": 208,
+          "y": 120,
+          "width": 88,
+          "height": 16,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#6c8391",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Иконка",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "11",
+            "weight": "400",
+            "align": "center",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Поверх остальных окон",
+          "type": "text",
+          "x": 24,
+          "y": 152,
+          "width": 224,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Поверх остальных окон",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Поверх остальных окон / пояснение",
+          "type": "text",
+          "x": 24,
+          "y": 173,
+          "width": 222,
+          "height": 13,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Оверлей всегда перед глазами",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "9",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Поверх остальных окон / переключатель",
+          "type": "rectangle",
+          "x": 260,
+          "y": 152,
+          "width": 36,
+          "height": 20,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#527f89",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 10
+        },
+        {
+          "name": "Поверх остальных окон / бегунок",
+          "type": "rectangle",
+          "x": 278,
+          "y": 155,
+          "width": 14,
+          "height": 14,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 7
+        },
+        {
+          "name": "Запускать с Windows",
+          "type": "text",
+          "x": 24,
+          "y": 203,
+          "width": 224,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Запускать с Windows",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Запускать с Windows / пояснение",
+          "type": "text",
+          "x": 24,
+          "y": 224,
+          "width": 222,
+          "height": 13,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "При входе в учётную запись",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "9",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Запускать с Windows / переключатель",
+          "type": "rectangle",
+          "x": 260,
+          "y": 203,
+          "width": 36,
+          "height": 20,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#b5cbd4",
+              "fillOpacity": 0.6,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 10
+        },
+        {
+          "name": "Запускать с Windows / бегунок",
+          "type": "rectangle",
+          "x": 263,
+          "y": 206,
+          "width": 14,
+          "height": 14,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 7
+        },
+        {
+          "name": "Показывать выполненные",
+          "type": "text",
+          "x": 24,
+          "y": 254,
+          "width": 224,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Показывать выполненные",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Показывать выполненные / пояснение",
+          "type": "text",
+          "x": 24,
+          "y": 275,
+          "width": 222,
+          "height": 13,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Готовые задачи — внизу списка",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "9",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Показывать выполненные / переключатель",
+          "type": "rectangle",
+          "x": 260,
+          "y": 254,
+          "width": 36,
+          "height": 20,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#527f89",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 10
+        },
+        {
+          "name": "Показывать выполненные / бегунок",
+          "type": "rectangle",
+          "x": 278,
+          "y": 257,
+          "width": 14,
+          "height": 14,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 7
+        },
+        {
+          "name": "Подтверждать удаление",
+          "type": "text",
+          "x": 24,
+          "y": 305,
+          "width": 224,
+          "height": 17,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Подтверждать удаление",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Подтверждать удаление / пояснение",
+          "type": "text",
+          "x": 24,
+          "y": 326,
+          "width": 222,
+          "height": 13,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "При правом щелчке по задаче",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "9",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Подтверждать удаление / переключатель",
+          "type": "rectangle",
+          "x": 260,
+          "y": 305,
+          "width": 36,
+          "height": 20,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#527f89",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 10
+        },
+        {
+          "name": "Подтверждать удаление / бегунок",
+          "type": "rectangle",
+          "x": 278,
+          "y": 308,
+          "width": 14,
+          "height": 14,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 7
+        },
+        {
+          "name": "Автоочистка",
+          "type": "text",
+          "x": 24,
+          "y": 424,
+          "width": 272,
+          "height": 28,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#526b7a",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Автоочистка касается только «На сегодня».\n«Большие» хранятся до ручного удаления.",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "10",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.4"
+          }
+        },
+        {
+          "name": "Импорт / иконка · эталон 18",
+          "type": "group",
+          "x": 44,
+          "y": 20,
+          "width": 16,
+          "height": 16,
+          "hidden": false,
+          "fills": [],
+          "strokes": [],
+          "radius": null
+        },
+        {
+          "name": "Сворачивать при фокусе",
+          "type": "text",
+          "x": 24,
+          "y": 357,
+          "width": 224,
+          "height": 29,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Сворачивать при фокусе\nна других окнах",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "12",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.2"
+          }
+        },
+        {
+          "name": "Сворачивание / пояснение",
+          "type": "text",
+          "x": 24,
+          "y": 393,
+          "width": 224,
+          "height": 11,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#233c4c",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": null,
+          "text": "Компактный режим 100 × 100",
+          "font": {
+            "family": "Montserrat Alternates",
+            "size": "9",
+            "weight": "400",
+            "align": "left",
+            "lineHeight": "1.2"
+          }
+        },
+        {
+          "name": "Сворачивание / выключено",
+          "type": "rectangle",
+          "x": 260,
+          "y": 364,
+          "width": 36,
+          "height": 20,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#cfdce3",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 10
+        },
+        {
+          "name": "Сворачивание / бегунок",
+          "type": "rectangle",
+          "x": 263,
+          "y": 367,
+          "width": 14,
+          "height": 14,
+          "hidden": false,
+          "fills": [
+            {
+              "fillColor": "#ffffff",
+              "fillOpacity": 1,
+              "fillColorGradient": null,
+              "fillColorRefFile": null,
+              "fillColorRefId": null,
+              "fillImage": null
+            }
+          ],
+          "strokes": [],
+          "radius": 7
+        }
+      ]
+    }
+  ],
+  "log": ""
+}
