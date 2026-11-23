@@ -2,13 +2,18 @@ import {
   fresh, validateDocument, validateText, countText, rows, startDraft, saveDraft,
   removeTask, restoreTask, toggleTask, cleanup, fitGeometry, compactTarget, makeSaver,
   parseTxt, suggestedImportName, validateImportName, reviseImportRow, saveImport,
-  repeatImport, removeBatch,
+  repeatImport, removeBatch, listTasks, taskList, moveToToday, undoMove, linkParts,
 } from './core.js';
 
 const $ = id => document.getElementById(id);
 const tauri = window.__TAURI__;
 const native = !!tauri;
-const invoke = (name, args) => tauri.core.invoke(name, args);
+let nativeDialogs=0, windowFocused=true, focusTimer;
+const invoke = async (name,args) => {
+ const dialog=['choose_txt','choose_image','recover_state','popup_menu'].includes(name);
+ if(dialog)nativeDialogs++;
+ try{return await tauri.core.invoke(name,args);}finally{if(dialog)nativeDialogs--;}
+};
 const win = native ? tauri.window.getCurrentWindow() : null;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let state = fresh(), boot = null, ready = false, view = 'full', geometryBusy = false;
@@ -206,7 +211,13 @@ function render() {
       check.setAttribute('role', 'checkbox'); check.setAttribute('aria-checked', String(task.done));
       if (task.done) { const img = document.createElement('img'); img.src='assets/mini.svg'; img.alt=''; check.append(img); }
       const text = document.createElement('span');
-      text.className='task-text'; text.textContent=task.text; text.tabIndex=0;
+      text.className='task-text'; text.tabIndex=0;
+      for(const part of linkParts(task.text)){
+        if(!part.url){text.append(document.createTextNode(part.text));continue;}
+        const a=document.createElement('a');a.href=part.url;a.textContent=part.text;a.title='Открыть в браузере';
+        a.onclick=e=>{e.preventDefault();e.stopPropagation();if(native)invoke('open_url',{url:part.url}).catch(message);else window.open(part.url,'_blank','noopener,noreferrer');};
+        a.ondblclick=e=>e.stopPropagation();a.onkeydown=e=>e.stopPropagation();text.append(a);
+      }
       text.setAttribute('aria-label', 'Изменить: ' + task.text);
       const edit = () => {
         if (state.draft) { host.querySelector('textarea')?.focus(); return; }
@@ -214,6 +225,9 @@ function render() {
       };
       text.ondblclick=edit; text.onkeydown=e=>{if(e.key==='Enter'||e.key==='F2'){e.preventDefault();edit();}};
       row.append(check, text);
+      if(taskList(task)==='big'){
+        const move=button('→','Перенести в На сегодня',()=>transferTask(task.id),'move-task');row.append(move);
+      }
     }
     host.append(row);
   }
@@ -226,7 +240,7 @@ function render() {
       onCancel:() => { state.draft=null;clearTimeout(draftTimer);afterMutation(); },
     })); host.append(row);
   }
-  if (!state.tasks.length && !state.draft) {
+  if (!listTasks(state).length && !state.draft) {
     const empty=document.createElement('div'); empty.className='empty-list';
     const img=document.createElement('img');img.src='assets/mini.svg';img.alt='';
     const title=document.createElement('h2');title.textContent='Пока нет задач';
@@ -234,10 +248,12 @@ function render() {
     empty.append(img,title,note);host.append(empty);
   }
   host.scrollTop=scroll;
-  const done=state.tasks.filter(t=>t.done).length, percent=state.tasks.length?done/state.tasks.length*100:0;
-  $('count').textContent=done+' из '+state.tasks.length;
+  const visibleTasks=listTasks(state),done=visibleTasks.filter(t=>t.done).length, percent=visibleTasks.length?done/visibleTasks.length*100:0;
+  $('count').textContent=done+' из '+visibleTasks.length;
   $('progressFill').style.width=percent+'%';$('progress').setAttribute('aria-valuenow',String(Math.round(percent)));
   $('add').disabled=!!state.draft||operationBusy;
+  $('listTitle').textContent=state.activeList==='big'?'Большие дела':'Дела на сегодня';
+  for(const tab of document.querySelectorAll('[data-list]'))tab.setAttribute('aria-selected',String(tab.dataset.list===state.activeList));
   applyStyle();
 }
 function applyStyle() {
@@ -404,9 +420,9 @@ async function runImport(produce) {
   for(const b of $('importView').querySelectorAll('button,input'))b.disabled=true;
   operationPromise=(async()=>{
     try {
-      const next=validateDocument(state),added=produce(next);
+      const next=validateDocument(state),added=produce(next);next.activeList='today';
       await save(next);
-      state=next;retryOperation=null;importDraft=null;importEditing=null;$('importRows').replaceChildren();
+      state=next;state.activeList='today';retryOperation=null;importDraft=null;importEditing=null;$('importRows').replaceChildren();
       operationBusy=false;render();await showView('full');
       showToast('Добавлено '+added.count+' задач',()=>removeBatch(state,added.batchId),generation);
     }catch(error){
@@ -484,7 +500,7 @@ async function settings() {
   if(operationBusy||geometryBusy)return;
   if(state.settings.mode==='compact')await setMode('full');
   if(!canLeaveEditor())return;
-  for(const name of ['topmost','showDone','confirmDelete'])$(name).checked=state.settings[name];
+  for(const name of ['topmost','showDone','confirmDelete','collapseOnBlur'])$(name).checked=state.settings[name];
   $('color').value=state.settings.color;$('transparency').value=state.settings.transparency;$('opacityLabel').value=state.settings.transparency+'%';
   if(native){try{$('autostart').checked=await invoke('autostart_enabled');}catch(e){message(e);}}
   await showView('settings');
@@ -569,7 +585,7 @@ for(const b of document.querySelectorAll('[data-tab]'))b.onclick=()=>{
   for(const tab of document.querySelectorAll('[data-tab]'))tab.setAttribute('aria-pressed',String(tab===b));
   for(const pane of document.querySelectorAll('[data-pane]'))pane.hidden=pane.dataset.pane!==b.dataset.tab;
 };
-for(const name of ['topmost','showDone','confirmDelete'])$(name).onchange=async e=>{
+for(const name of ['topmost','showDone','confirmDelete','collapseOnBlur'])$(name).onchange=async e=>{
   const value=e.target.checked;
   try{if(name==='topmost'&&native)await invoke('set_topmost',{enabled:value});state.settings[name]=value;render();await persist();}
   catch(error){e.target.checked=state.settings[name];message(error);}
@@ -631,7 +647,14 @@ async function bootAndRender() {
     if(undoRecord&&Date.now()>undoRecord.expires)hideToast(true);
     if(!operationBusy&&cleanup(state,Date.now(),boot))afterMutation();
   });
-  window.addEventListener('blur',()=>saveActiveEditor?.());
+  const focusChanged=focused=>{
+    windowFocused=focused;clearTimeout(focusTimer);
+    if(!focused){saveActiveEditor?.();if(!state.settings.collapseOnBlur)return;focusTimer=setTimeout(()=>{
+      if(ready&&!windowFocused&&state.settings.collapseOnBlur&&state.settings.mode==='full'&&!geometryBusy&&!operationBusy&&!nativeDialogs&&!document.querySelector('dialog[open]'))void setMode('compact');
+    },150);}
+  };
+  if(native)await tauri.event.listen('window-focus',e=>focusChanged(e.payload));
+  else {window.addEventListener('blur',()=>focusChanged(false));window.addEventListener('focus',()=>focusChanged(true));}
 }
 async function init() {
   if(native)await tauri.event.listen('native-error',e=>message(e.payload));
@@ -655,3 +678,15 @@ async function init() {
 }
 reducedMotion.addEventListener('change',()=>updateIcon());
 init().catch(message);
+
+async function transferTask(id){
+ if(operationBusy||geometryBusy||!canLeaveEditor())return;
+ operationBusy=true;clearTimeout(draftTimer);const generation=++notificationGeneration;hideToast(true);
+ const next=validateDocument(state);let record;
+ try{record=moveToToday(next,id);await save(next);state=next;render();showToast('Задача перенесена на сегодня',()=>undoMove(state,record),generation);}
+ catch(error){message(error);}finally{operationBusy=false;render();}
+}
+for(const tab of document.querySelectorAll('[data-list]'))tab.onclick=()=>{
+ if(operationBusy||geometryBusy||state.activeList===tab.dataset.list||!canLeaveEditor())return;
+ state.activeList=tab.dataset.list;render();$('tasks').scrollTop=0;persist().catch(message);
+};
