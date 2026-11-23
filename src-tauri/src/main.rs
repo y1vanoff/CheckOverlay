@@ -1,4 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+mod frame;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use image::{AnimationDecoder, ImageFormat};
 use serde_json::Value;
@@ -104,19 +105,45 @@ fn choose_txt()->Result<Option<Value>,String>{
  let name=path.file_name().ok_or("Некорректное имя TXT")?.to_string_lossy();
  txt_document(&name,&fs::read(&path).map_err(error)?).map(Some)
 }
+fn webview_drag_payload(event:&tauri::WebviewEvent)->Result<Option<Value>,String>{
+ match event {
+  tauri::WebviewEvent::DragDrop(tauri::DragDropEvent::Enter{..})=>{
+   Ok(Some(serde_json::json!({"type":"enter"})))
+  },
+  tauri::WebviewEvent::DragDrop(tauri::DragDropEvent::Drop{paths,..})=>{
+   if paths.len()!=1{return Err("Перетащите один файл TXT".to_string());}
+   let path=&paths[0];
+   if fs::metadata(path).map_err(error)?.len()>1024*1024{return Err("Максимальный размер TXT — 1 МБ".into());}
+   let name=path.file_name().ok_or("Некорректное имя TXT")?.to_string_lossy();
+   let file=txt_document(&name,&fs::read(path).map_err(error)?)?;
+   Ok(Some(serde_json::json!({"type":"drop","file":file})))
+  },
+  _=>Ok(None)
+ }
+}
 fn apply_window_shape(w:&tauri::WebviewWindow)->Result<(),String>{
  #[cfg(windows)]{
   use windows_sys::Win32::Graphics::Gdi::{CreateRoundRectRgn,DeleteObject,SetWindowRgn};
+  use windows_sys::Win32::UI::WindowsAndMessaging::{GetWindowLongPtrW,SetWindowLongPtrW,SetWindowPos,GWL_STYLE,WS_CAPTION,SWP_NOMOVE,SWP_NOSIZE,SWP_NOZORDER,SWP_NOACTIVATE,SWP_FRAMECHANGED};
+  let hwnd=w.hwnd().map_err(error)?.0 as _;
+  // Resizable borderless Tao windows can regain WS_CAPTION after Windows events.
+  // Keep the resize border, but remove the native title bar before repainting.
+  let style=unsafe{GetWindowLongPtrW(hwnd,GWL_STYLE)};
+  if style & WS_CAPTION as isize != 0 {
+   unsafe {
+    SetWindowLongPtrW(hwnd,GWL_STYLE,style & !(WS_CAPTION as isize));
+    SetWindowPos(hwnd,std::ptr::null_mut(),0,0,0,0,SWP_NOMOVE|SWP_NOSIZE|SWP_NOZORDER|SWP_NOACTIVATE|SWP_FRAMECHANGED);
+   }
+  }
   let state=w.state::<WindowShape>();
   let compact=state.compact.load(Ordering::Relaxed);
   let size=w.outer_size().map_err(error)?;
   if size.width==0||size.height==0{return Ok(());}
-  let diameter=(48.0*w.scale_factor().map_err(error)?).round() as i32;
+  let diameter=(36.0*w.scale_factor().map_err(error)?).round() as i32;
   let key=(size.width,size.height,diameter,compact);
   // Changing a region can send window-position messages synchronously.
   let Ok(mut last)=state.last.try_lock() else{return Ok(())};
   if *last==Some(key){return Ok(());}
-  let hwnd=w.hwnd().map_err(error)?.0 as _;
   let region=if compact{std::ptr::null_mut()}else{
    let region=unsafe{CreateRoundRectRgn(0,0,size.width as i32+1,size.height as i32+1,diameter,diameter)};
    if region.is_null(){return Err(std::io::Error::last_os_error().to_string());}region
@@ -139,33 +166,18 @@ fn set_material(app:tauri::AppHandle,compact:bool)->Result<(),String>{
  apply_window_shape(&w)
 }
 #[tauri::command]
-async fn transition_window(app:tauri::AppHandle,x:i32,y:i32,width:u32,height:u32,animate:bool)->Result<(),String>{
+async fn transition_window(app:tauri::AppHandle,x:i32,y:i32,width:u32,height:u32)->Result<(),String>{
  if width==0||height==0||width>32768||height>32768{return Err("Некорректный размер окна".into());}
  let w=app.get_webview_window("main").ok_or("Окно недоступно")?;
- let from=w.outer_position().map_err(error)?;
- let inner=w.inner_size().map_err(error)?;
- let outer=w.outer_size().map_err(error)?;
+ // Frontend fades out before this atomic geometry change; never interpolate size.
  #[cfg(windows)]{
   use windows_sys::Win32::UI::WindowsAndMessaging::{SetWindowPos,SWP_NOZORDER,SWP_NOACTIVATE};
-  let hwnd=w.hwnd().map_err(error)?.0 as isize;
-  let outer_width=width+outer.width.saturating_sub(inner.width);
-  let outer_height=height+outer.height.saturating_sub(inner.height);
-  tauri::async_runtime::spawn_blocking(move||{
-   let start=std::time::Instant::now();
-   loop{
-    let p=if animate{(start.elapsed().as_secs_f64()/0.22).min(1.0)}else{1.0};
-    let k=p*p*(3.0-2.0*p);
-    let mix=|a:f64,b:f64|(a+(b-a)*k).round() as i32;
-    let ok=unsafe{SetWindowPos(hwnd as _,std::ptr::null_mut(),mix(from.x as f64,x as f64),mix(from.y as f64,y as f64),mix(outer.width as f64,outer_width as f64),mix(outer.height as f64,outer_height as f64),SWP_NOZORDER|SWP_NOACTIVATE)};
-    if ok==0{return Err(std::io::Error::last_os_error().to_string());}
-    if p>=1.0{break;}
-    std::thread::sleep(std::time::Duration::from_millis(10));
-   }
-   Ok::<(),String>(())
-  }).await.map_err(error)??;
+  let hwnd=w.hwnd().map_err(error)?.0 as _;
+  let inner=w.inner_size().map_err(error)?;let outer=w.outer_size().map_err(error)?;
+  let ok=unsafe{SetWindowPos(hwnd,std::ptr::null_mut(),x,y,(width+outer.width.saturating_sub(inner.width)) as i32,(height+outer.height.saturating_sub(inner.height)) as i32,SWP_NOZORDER|SWP_NOACTIVATE)};
+  if ok==0{return Err(std::io::Error::last_os_error().to_string());}
  }
  #[cfg(not(windows))]{
-  let _=(from,inner,outer,animate);
   w.set_size(tauri::PhysicalSize::new(width,height)).map_err(error)?;
   w.set_position(tauri::PhysicalPosition::new(x,y)).map_err(error)?;
  }
@@ -188,6 +200,14 @@ fn main(){
   .manage(DiskLock(Mutex::new(())))
   .manage(WindowShape::default())
   .invoke_handler(tauri::generate_handler![load_state,save_state,archive_corrupt,recover_state,autostart_enabled,set_autostart,boot_id,choose_image,read_icon,choose_txt,transition_window,set_material,set_topmost,quit_app,popup_menu])
+  // WebView2 delivers Explorer drag/drop to the webview, not the outer window.
+  .on_webview_event(|webview,event|{
+   match webview_drag_payload(event) {
+    Ok(Some(payload))=>{let _=webview.emit("native-file-drag",payload);},
+    Ok(None)=>{},
+    Err(e)=>{let _=webview.emit("native-error",e);}
+   }
+  })
   .on_window_event(|window,event|{
    match event {
     tauri::WindowEvent::CloseRequested{api,..}=>{api.prevent_close();let _=window.emit("app-action","hide");},
@@ -209,7 +229,9 @@ fn main(){
     .on_menu_event(|app,event|{let _=app.emit("app-action",event.id().as_ref());})
     .on_tray_icon_event(|tray,event|{if matches!(event,TrayIconEvent::Click{button:MouseButton::Left,button_state:MouseButtonState::Up,..}){let app=tray.app_handle();if let Some(w)=app.get_webview_window("main"){let _=w.show();let _=w.set_focus();}let _=app.emit("app-action","show");}}).build(app)?;
    app.manage(tray);
-   if let Some(w)=app.get_webview_window("main"){w.set_background_color(Some(tauri::window::Color(0,0,0,0)))?;apply_window_shape(&w).map_err(std::io::Error::other)?;}
+   if let Some(w)=app.get_webview_window("main"){
+    #[cfg(windows)]frame::install(w.hwnd()?.0 as _).map_err(std::io::Error::other)?;
+    w.set_background_color(Some(tauri::window::Color(0,0,0,0)))?;apply_window_shape(&w).map_err(std::io::Error::other)?;}
    Ok(())
   }).run(tauri::generate_context!()).expect("Не удалось запустить CheckOverlay");
 }
@@ -217,6 +239,24 @@ fn main(){
 #[cfg(test)]
 mod tests {
  use super::*;
+ #[test]
+ fn webview_drag_events_open_import_and_read_the_dropped_file(){
+  let position=tauri::PhysicalPosition::new(10.0,20.0);
+  let folder=std::env::temp_dir().join(format!("checkoverlay-drop-test-{}",uuid::Uuid::new_v4()));
+  fs::create_dir(&folder).unwrap();let path=folder.join("tasks.TXT");
+  fs::write(&path,"Первая\nВторая").unwrap();
+  let enter=tauri::WebviewEvent::DragDrop(tauri::DragDropEvent::Enter{paths:vec![path.clone()],position});
+  assert_eq!(webview_drag_payload(&enter).unwrap().unwrap()["type"],"enter");
+  let drop=tauri::WebviewEvent::DragDrop(tauri::DragDropEvent::Drop{paths:vec![path.clone()],position});
+  let payload=webview_drag_payload(&drop).unwrap().unwrap();
+  assert_eq!(payload["type"],"drop");assert_eq!(payload["file"]["name"],"tasks.TXT");
+  assert_eq!(payload["file"]["text"],"Первая\nВторая");
+  let multiple=tauri::WebviewEvent::DragDrop(tauri::DragDropEvent::Drop{paths:vec![path.clone(),path.clone()],position});
+  assert!(webview_drag_payload(&multiple).is_err());
+  let leave=tauri::WebviewEvent::DragDrop(tauri::DragDropEvent::Leave);
+  assert!(webview_drag_payload(&leave).unwrap().is_none());
+  fs::remove_file(path).unwrap();fs::remove_dir(folder).unwrap();
+ }
  #[test]
  #[cfg(windows)]
  fn windows_boot_guid_is_stable_and_nonzero(){let first=boot_id().unwrap();assert_eq!(first.len(),32);assert!(first.chars().any(|c|c!='0'));assert_eq!(first,boot_id().unwrap());}

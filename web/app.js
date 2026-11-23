@@ -12,10 +12,21 @@ const invoke = (name, args) => tauri.core.invoke(name, args);
 const win = native ? tauri.window.getCurrentWindow() : null;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let state = fresh(), boot = null, ready = false, view = 'full', geometryBusy = false;
+let geometryDone = Promise.resolve();
 let pendingDelete = null, importDraft = null, importEditing = null;
 let operationBusy = false, operationPromise = null, retryOperation = null;
 let draftTimer, undoTimer, hideToastTimer, undoRecord = null, notificationGeneration = 0;
 let iconUrl = 'assets/duck.svg';
+let saveActiveEditor = null;
+let pointerInProgress = false, pendingEditorBlur = null;
+function finishEditorPointer() {
+  pointerInProgress = false;
+  const finish = pendingEditorBlur; pendingEditorBlur = null; finish?.();
+}
+document.addEventListener('pointerdown',()=>{pointerInProgress=true;},true);
+document.addEventListener('click',finishEditorPointer);
+document.addEventListener('pointerup',()=>setTimeout(finishEditorPointer,0));
+document.addEventListener('pointercancel',finishEditorPointer);
 
 function message(error) {
   $('messageText').textContent = String(error?.message ?? error);
@@ -90,6 +101,12 @@ function requestDelete(id) {
   $('deleteDialog').showModal(); $('no').focus();
 }
 function afterMutation() { render(); persist().catch(message); }
+function commitTask(next = false) {
+  saveDraft(state, crypto.randomUUID());
+  clearTimeout(draftTimer);
+  if (next) startDraft(state);
+  afterMutation();
+}
 
 function makeEditor({text, label, onInput, onSave, onCancel, importRow = false}) {
   const area = document.createElement('div'); area.className = 'editor-area';
@@ -100,12 +117,29 @@ function makeEditor({text, label, onInput, onSave, onCancel, importRow = false})
   const counter = document.createElement('span'); counter.className = 'counter';
   const error = document.createElement('p'); error.className = 'error-text';
   error.setAttribute('role', 'alert');
-  const submit = () => {
-    try { validateText(input.value); onSave(input.value); }
-    catch (e) { error.textContent = e.message; input.focus(); }
+  let submitted = false;
+  const submit = (next = false, refocus = true) => {
+    if (submitted || !area.isConnected) return;
+    try {
+      validateText(input.value); submitted = true;
+      onSave(input.value, next);
+    } catch (e) { submitted = false; error.textContent = e.message; if (refocus) input.focus(); }
   };
-  const yes = glyphButton('check', importRow ? 'Сохранить правку' : 'Сохранить задачу', submit);
+  const yes = glyphButton('check', importRow ? 'Сохранить правку' : 'Сохранить задачу', () => submit());
   const no = glyphButton('cross', importRow ? 'Отменить правку' : 'Удалить строку', onCancel);
+  // Keep editor controls from blurring the field before their click is handled.
+  for (const control of [yes, no]) control.onpointerdown = e => e.preventDefault();
+  if (!importRow) {
+    const autosave = () => {
+      if (!submitted && area.isConnected && input.value.trim() && !operationBusy) submit(false, false);
+    };
+    saveActiveEditor = autosave;
+    input.onblur = () => queueMicrotask(() => {
+      if (controls.contains(document.activeElement)) return;
+      if (pointerInProgress) pendingEditorBlur = autosave;
+      else autosave();
+    });
+  }
   function resize() {
     field.classList.remove('multiline'); input.style.height = '34px';
     if (input.scrollHeight > 34) field.classList.add('multiline');
@@ -125,6 +159,9 @@ function makeEditor({text, label, onInput, onSave, onCancel, importRow = false})
   input.onkeydown = e => {
     if (e.isComposing) return;
     if (e.key === 'Enter') { e.preventDefault(); if (!yes.disabled) submit(); }
+    if (e.key === 'Tab' && !e.shiftKey && !importRow) {
+      e.preventDefault(); if (!yes.disabled) submit(true);
+    }
     if (e.key === 'Escape') {
       e.preventDefault(); e.stopPropagation();
       if (importRow) onCancel();
@@ -143,6 +180,7 @@ function makeEditor({text, label, onInput, onSave, onCancel, importRow = false})
   return area;
 }
 function render() {
+  saveActiveEditor = null;
   const host = $('tasks'), scroll = host.scrollTop;
   host.replaceChildren();
   for (const task of rows(state)) {
@@ -156,12 +194,13 @@ function render() {
       row.append(makeEditor({
         text:state.draft.text, label:'Изменить задачу',
         onInput:text => { state.draft.text = text; scheduleDraft(); },
-        onSave:() => { saveDraft(state, crypto.randomUUID()); clearTimeout(draftTimer); afterMutation(); },
+        onSave:(_text, next) => commitTask(next),
         onCancel:() => requestDelete(task.id),
       }));
     } else {
       const check = button('', task.done ? 'Вернуть задачу в работу' : 'Отметить выполненной', () => {
         if (operationBusy) return;
+        saveActiveEditor?.();
         toggleTask(state, task.id, Date.now(), boot); afterMutation();
       }, 'task-toggle');
       check.setAttribute('role', 'checkbox'); check.setAttribute('aria-checked', String(task.done));
@@ -183,7 +222,7 @@ function render() {
     row.append(makeEditor({
       text:state.draft.text, label:'Новая задача',
       onInput:text => { state.draft.text=text; scheduleDraft(); },
-      onSave:() => { saveDraft(state,crypto.randomUUID());clearTimeout(draftTimer);afterMutation(); },
+      onSave:(_text, next) => commitTask(next),
       onCancel:() => { state.draft=null;clearTimeout(draftTimer);afterMutation(); },
     })); host.append(row);
   }
@@ -216,9 +255,17 @@ async function updateIcon() {
   } catch(error) { message(error);$('compactImage').src='assets/duck.svg';$('previewIcon').src='assets/duck.svg'; }
 }
 async function rememberGeometry() {
-  if(!native||geometryBusy||!ready||operationBusy||view!=='full')return;
+  if(!native||geometryBusy||!ready)return;
   const p=await win.outerPosition(),size=await win.innerSize(),scale=await win.scaleFactor();
-  state.settings.geometry[state.settings.mode]={x:p.x,y:p.y,width:size.width/scale,height:size.height/scale};
+  if(geometryBusy)return;
+  const geometry=state.settings.geometry, mode=state.settings.mode;
+  geometry[mode]={x:p.x,y:p.y,width:size.width/scale,height:size.height/scale};
+  if(mode==='full'){
+    geometry.compact={x:p.x+size.width-100*scale,y:p.y,width:100,height:100};
+  }else{
+    const full=geometry.full??{width:320,height:470};
+    geometry.full={...full,x:p.x+size.width-full.width*scale,y:p.y};
+  }
   persist().catch(message);
 }
 async function monitorFor(rect) {
@@ -226,32 +273,15 @@ async function monitorFor(rect) {
   return monitors.find(m=>rect.x<m.workArea.position.x+m.workArea.size.width&&rect.x+rect.width>m.workArea.position.x&&rect.y<m.workArea.position.y+m.workArea.size.height&&rect.y+rect.height>m.workArea.position.y)
     ?? await tauri.window.primaryMonitor() ?? monitors[0];
 }
-async function resizeContent(height) {
-  if(!native){document.documentElement.style.setProperty('--preview-height',height+'px');return;}
-  if(!ready||state.settings.mode==='compact')return;
-  geometryBusy=true;
-  try{
-    const p=await win.outerPosition(),size=await win.innerSize(),scale=await win.scaleFactor();
-    const monitor=await monitorFor({...p,...size});if(!monitor)return;
-    const area=monitor.workArea, remembered=state.settings.geometry.full;
-    const width=remembered?.width??size.width/scale;
-    const h=Math.min(height,area.size.height/scale);
-    await win.setSize(new tauri.dpi.LogicalSize(width,h));
-    const pos=view==='full'&&remembered?remembered:p;
-    await win.setPosition(new tauri.dpi.PhysicalPosition(
-      Math.round(Math.min(Math.max(pos.x,area.position.x),area.position.x+area.size.width-width*scale)),
-      Math.round(Math.min(Math.max(pos.y,area.position.y),area.position.y+area.size.height-h*scale))));
-  }finally{geometryBusy=false;}
-}
 async function showView(next) {
   if(operationBusy)return;
   if(next!=='full'&&view==='full')await rememberGeometry();
   view=next;$('previewMenu').hidden=true;
   for(const id of ['full','settings','importView'])$(id).hidden=id!==next;
   $('importButton').setAttribute('aria-expanded',String(next==='importView'));
-  await resizeContent(next==='importView'?importDraft?730:758:next==='settings'?470:state.settings.geometry.full?.height??470);
 }
 function canLeaveEditor() {
+  saveActiveEditor?.();
   if(!state.draft)return true;
   message('Сначала сохраните или отмените изменение задачи.');
   $('tasks').querySelector('textarea')?.focus();return false;
@@ -288,12 +318,47 @@ async function loadTxt(file) {
   importDraft={filename:file.name,name:suggestedImportName(state,file.name),records};
   if(!records.length){
     $('importHome').hidden=true;$('importPreview').hidden=true;$('importEmpty').hidden=false;
-    $('emptyName').textContent=file.name;await resizeContent(550);return;
+    $('emptyName').textContent=file.name;return;
   }
   $('txtName').textContent=file.name;$('importName').value=importDraft.name;
   $('importHome').hidden=true;$('importPreview').hidden=false;$('importEmpty').hidden=true;
-  renderImportRows();await resizeContent(730);
+  renderImportRows();
 }
+let dropViewPromise = null;
+function revealDropView() {
+  if(operationBusy)return Promise.resolve(false);
+  if(dropViewPromise)return dropViewPromise;
+  dropViewPromise=(async()=>{
+    await geometryDone;
+    if(view!=='importView'||state.settings.mode==='compact')await openImports();
+    return view==='importView'&&state.settings.mode==='full';
+  })().finally(()=>{dropViewPromise=null;});
+  return dropViewPromise;
+}
+async function acceptDroppedFile(file) {
+  if(operationBusy)return;
+  try {
+    if(!await revealDropView())return;
+    clearMessage();await loadTxt(file);
+  } catch(error) { message(error); }
+}
+document.addEventListener('dragover',e=>{
+  if(!e.dataTransfer?.types.includes('Files'))return;
+  e.preventDefault();e.dataTransfer.dropEffect=operationBusy?'none':'copy';
+  revealDropView().catch(message);
+});
+document.addEventListener('drop',async e=>{
+  if(!e.dataTransfer?.files.length)return;
+  e.preventDefault();
+  if(operationBusy)return;
+  try {
+    if(e.dataTransfer.files.length!==1)throw Error('Перетащите один файл TXT');
+    const file=e.dataTransfer.files[0];
+    if(file.size>1024*1024)throw Error('Максимальный размер TXT — 1 МБ');
+    const text=new TextDecoder('utf-8',{fatal:true}).decode(await file.arrayBuffer());
+    await acceptDroppedFile({name:file.name,text});
+  }catch(error){message(error instanceof TypeError?'Выберите текстовый файл в кодировке UTF-8':error);}
+});
 function updateImportValidity() {
   if(!importDraft)return;
   const records=importDraft.records,valid=records.filter(r=>r.valid).length,skipped=records.length-valid;
@@ -354,19 +419,30 @@ async function runImport(produce) {
   })();
   return operationPromise;
 }
+async function fadeWindow(from,to) {
+ const app=$('app');
+ const animation=app.animate([{opacity:from},{opacity:to}],{duration:120,easing:'ease-in-out',fill:'forwards'});
+ try{await animation.finished;app.style.opacity=String(to);}finally{animation.cancel();}
+}
 async function setMode(mode) {
   if(geometryBusy||operationBusy)return;
+  saveActiveEditor?.();
+  if(ready&&state.settings.mode===mode)return;
   if(mode==='compact'&&view!=='full')await showView('full');
   if(native&&ready)await rememberGeometry();
   const from=state.settings.mode,animate=ready&&from!==mode&&!reducedMotion.matches;
   geometryBusy=true;
+  let finishGeometry;
+  geometryDone=new Promise(resolve=>{finishGeometry=resolve;});
   const app=$('app');
   try {
+    if(animate){app.classList.add('fading');await fadeWindow(1,0);}
     if(native){
       const p=await win.outerPosition(),size=await win.innerSize();
       const old=state.settings.geometry[mode];
       const collapsing=mode==='compact'&&from==='full'&&ready;
-      const probe=!collapsing&&old?{x:old.x,y:old.y,width:1,height:1}
+      const expanding=mode==='full'&&from==='compact'&&ready;
+      const probe=expanding?{x:p.x,y:p.y,width:1,height:1}:!collapsing&&old?{x:old.x,y:old.y,width:1,height:1}
         :collapsing?{x:p.x+size.width-1,y:p.y,width:1,height:1}:{...p,...size};
       const monitor=await monitorFor(probe);
       if(monitor){
@@ -375,14 +451,17 @@ async function setMode(mode) {
         if(mode==='compact'&&from==='full'&&ready){
           target=compactTarget({...p,...size},scale,{x:area.position.x,y:area.position.y,...area.size});
         }else{
-          const logical=fitGeometry(old?{x:old.x/scale,y:old.y/scale,width:old.width,height:old.height}:null,[{x:area.position.x/scale,y:area.position.y/scale,width:area.size.width/scale,height:area.size.height/scale}],mode);
+          const saved=expanding?{x:(p.x+size.width)/scale-(old?.width??320),y:p.y/scale,width:old?.width??320,height:old?.height??470}
+            :old?{x:old.x/scale,y:old.y/scale,width:old.width,height:old.height}:null;
+          const logical=fitGeometry(saved,[{x:area.position.x/scale,y:area.position.y/scale,width:area.size.width/scale,height:area.size.height/scale}],mode);
           target={x:Math.round(logical.x*scale),y:Math.round(logical.y*scale),width:Math.round(logical.width*scale),height:Math.round(logical.height*scale)};
         }
-        await win.setMinSize(null);await win.setMaxSize(null);await win.setResizable(false);
-        if(animate){app.classList.add('morphing');app.style.width=innerWidth+'px';app.style.height=innerHeight+'px';}
-        await invoke('transition_window',{x:target.x,y:target.y,width:target.width,height:target.height,animate});
+        await win.setMinSize(null);await win.setMaxSize(null);
         await invoke('set_material',{compact:mode==='compact'});
-        if(mode==='full'){await win.setResizable(true);await win.setMinSize(new tauri.dpi.LogicalSize(Math.min(320,target.width/scale),Math.min(320,target.height/scale)));await win.setMaxSize(new tauri.dpi.LogicalSize(area.size.width/scale,area.size.height/scale));}
+        await invoke('transition_window',{x:target.x,y:target.y,width:target.width,height:target.height});
+        await invoke('set_material',{compact:mode==='compact'});
+        if(mode==='full'){await win.setMinSize(new tauri.dpi.LogicalSize(Math.min(320,target.width/scale),Math.min(320,target.height/scale)));await win.setMaxSize(new tauri.dpi.LogicalSize(area.size.width/scale,area.size.height/scale));}
+        else {await win.setMinSize(new tauri.dpi.LogicalSize(100,100));await win.setMaxSize(new tauri.dpi.LogicalSize(100,100));}
       }
     }
     state.settings.mode=mode;view='full';
@@ -391,14 +470,16 @@ async function setMode(mode) {
     $('compact').hidden=!compact;$('header').hidden=compact;$('full').hidden=compact;
     $('settings').hidden=true;$('importView').hidden=true;$('importButton').setAttribute('aria-expanded','false');
     if(compact){$('message').hidden=true;hideToast(true);}
-    await updateIcon();if(ready)await persist();
+    await updateIcon();
+    if(animate){
+      // Let WebView lay out and present the new geometry while fully transparent.
+      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+      await fadeWindow(0,1);
+    }
+    if(ready)await persist();
   }catch(error){message(error);}
-  finally{geometryBusy=false;app.classList.remove('morphing');app.style.removeProperty('width');app.style.removeProperty('height');app.style.removeProperty('transform');}
+  finally{geometryBusy=false;app.classList.remove('fading');app.style.removeProperty('opacity');finishGeometry();}
 }
-new ResizeObserver(()=>{
-  if(!$('app').classList.contains('morphing'))return;
-  const app=$('app');app.style.transform='scale('+innerWidth/parseFloat(app.style.width)+','+innerHeight/parseFloat(app.style.height)+')';
-}).observe(document.documentElement);
 async function settings() {
   if(operationBusy||geometryBusy)return;
   if(state.settings.mode==='compact')await setMode('full');
@@ -435,6 +516,7 @@ function openMenu(e) {e.preventDefault();if(native)invoke('popup_menu').catch(me
 $('header').oncontextmenu=openMenu;
 $('header').onpointerdown=e=>{
   if(e.button!==0||e.target.closest('button')||geometryBusy||operationBusy)return;
+  saveActiveEditor?.();
   if(native)win.startDragging().catch(message);
 };
 $('compact').oncontextmenu=openMenu;
@@ -477,7 +559,7 @@ $('txtInput').onchange=async e=>{
   }catch(error){message(error instanceof TypeError?'Выберите текстовый файл в кодировке UTF-8':error);}
 };
 $('importName').oninput=()=>{if(importDraft){importDraft.name=$('importName').value;updateImportValidity();}};
-$('cancelImport').onclick=()=>{if(operationBusy)return;importDraft=null;importEditing=null;retryOperation=null;renderImportHome();resizeContent(758).catch(message);};
+$('cancelImport').onclick=()=>{if(operationBusy)return;importDraft=null;importEditing=null;retryOperation=null;renderImportHome();};
 $('commitImport').onclick=()=>{
   if(!importDraft||importEditing!==null||$('commitImport').disabled)return;
   const records=structuredClone(importDraft.records),name=$('importName').value;
@@ -549,9 +631,15 @@ async function bootAndRender() {
     if(undoRecord&&Date.now()>undoRecord.expires)hideToast(true);
     if(!operationBusy&&cleanup(state,Date.now(),boot))afterMutation();
   });
+  window.addEventListener('blur',()=>saveActiveEditor?.());
 }
 async function init() {
   if(native)await tauri.event.listen('native-error',e=>message(e.payload));
+  if(native)await tauri.event.listen('native-file-drag',async e=>{
+    if(!ready||operationBusy)return;
+    if(e.payload.type==='enter')await revealDropView().catch(message);
+    if(e.payload.type==='drop')await acceptDroppedFile(e.payload.file);
+  });
   if(native)await tauri.event.listen('app-action',async e=>{
     try{
       if(!ready){if(e.payload==='quit'){await exit();return;}if(e.payload==='hide'){await win.hide();return;}await win.show();await win.setFocus();return;}
